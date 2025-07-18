@@ -54,7 +54,9 @@
                 <div class="flex items-center space-x-8">
                     <a href="#" id="home-link" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
                 </div>
-                <div class="hidden lg:flex items-center space-x-6">
+                <div class="hidden lg:flex items-center space-x-4">
+                     <button id="desktop-movies-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Filmes</button>
+                     <button id="desktop-series-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Séries</button>
                      <button id="desktop-list-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Minha Lista</button>
                     <div class="relative" id="profile-dropdown-container">
                         <button id="profile-button" class="w-9 h-9 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full overflow-hidden" title="Perfil"><img src="https://placehold.co/40x40/ffffff/333333?text=A" alt="Avatar do Utilizador" class="w-full h-full object-cover"></button>
@@ -77,10 +79,10 @@
                 <a href="#" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
                 <button id="close-mobile-nav"><i data-lucide="x" class="w-7 h-7"></i></button>
             </div>
-            <nav class="flex flex-col space-y-4 text-lg">
-                <a href="#" class="p-2 rounded-md hoverable-item">Início</a>
-                <a href="#" class="p-2 rounded-md hoverable-item">Filmes</a>
-                <a href="#" class="p-2 rounded-md hoverable-item">Séries</a>
+            <nav id="mobile-sidebar-nav" class="flex flex-col space-y-4 text-lg">
+                <a href="#" data-nav="home" class="p-2 rounded-md hoverable-item">Início</a>
+                <a href="#" data-nav="movies" class="p-2 rounded-md hoverable-item">Filmes</a>
+                <a href="#" data-nav="series" class="p-2 rounded-md hoverable-item">Séries</a>
             </nav>
         </div>
     </div>
@@ -91,7 +93,7 @@
         </section>
 
         <div id="content-container" class="py-8 md:py-12">
-            <!-- Carrosséis ou a página "Minha Lista" serão populados aqui -->
+            <!-- Carrosséis ou outras páginas serão populados aqui -->
         </div>
     </main>
     
@@ -151,7 +153,7 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button')
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button')
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -221,12 +223,36 @@
                 `;
 
                 if (listMovies.length > 0) {
-                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">${listMovies.map(createMovieCardHTML).join('')}</div>`;
+                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${listMovies.map(createMovieCardHTML).join('')}</div>`;
                 } else {
                     contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);">
                         <i data-lucide="list-x" class="w-16 h-16 mx-auto mb-4"></i>
                         <h3 class="text-xl font-semibold">Sua lista está vazia</h3>
                         <p class="mt-2">Adicione filmes e séries para vê-los aqui.</p>
+                    </div>`;
+                }
+
+                contentHTML += '</div>';
+                DOMElements.contentContainer.innerHTML = contentHTML;
+                lucide.createIcons();
+            }
+
+            function renderCategoryPage(pageTitle, items, emptyMessage) {
+                DOMElements.heroSection.style.display = 'none';
+                updateActiveNav(''); // Desativa qualquer item ativo na barra de navegação inferior
+
+                let contentHTML = `
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-8">${pageTitle}</h2>
+                `;
+
+                if (items.length > 0) {
+                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${items.map(createMovieCardHTML).join('')}</div>`;
+                } else {
+                    contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);">
+                        <i data-lucide="tv-2" class="w-16 h-16 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-semibold">${emptyMessage.title}</h3>
+                        <p class="mt-2">${emptyMessage.subtitle}</p>
                     </div>`;
                 }
 
@@ -356,9 +382,13 @@
                 DOMElements.closeProfileOverlay.onclick = () => DOMElements.mobileProfileOverlay.classList.remove('active');
                 DOMElements.mobileThemeToggle.onclick = toggleTheme;
                 
+                // Navegação Principal
                 DOMElements.homeLink.onclick = (e) => { e.preventDefault(); renderHomePage(); };
                 DOMElements.desktopListBtn.onclick = renderMyListPage;
-                
+                DOMElements.desktopMoviesBtn.onclick = () => renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' });
+                DOMElements.desktopSeriesBtn.onclick = () => renderCategoryPage('Séries', [], { title: 'Séries em Breve', subtitle: 'Nenhuma série encontrada. Volte mais tarde!' });
+
+                // Navegação da Barra Inferior (Mobile)
                 DOMElements.mobileNavBar.addEventListener('click', (e) => {
                     const navBtn = e.target.closest('.mobile-nav-item');
                     if (!navBtn || !navBtn.dataset.nav) return;
@@ -368,26 +398,41 @@
                     // Adicionar lógica para 'search' aqui se necessário
                 });
 
-                document.addEventListener('click', (e) => {
-                    const detailsBtn = e.target.closest('.details-btn');
-                    if (detailsBtn) {
-                        showDetailsModal(detailsBtn.dataset.movieId);
-                        return;
-                    }
+                // Navegação do Menu Lateral (Mobile)
+                const mobileSidebarNav = document.getElementById('mobile-sidebar-nav');
+                mobileSidebarNav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const navLink = e.target.closest('a');
+                    if (!navLink || !navLink.dataset.nav) return;
 
-                    const watchBtn = e.target.closest('.watch-btn');
-                    if (watchBtn) {
-                        openPlayerModal(watchBtn.dataset.movieId);
-                        return;
+                    const navTarget = navLink.dataset.nav;
+                    switch(navTarget) {
+                        case 'home':
+                            renderHomePage();
+                            break;
+                        case 'movies':
+                            renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' });
+                            break;
+                        case 'series':
+                            renderCategoryPage('Séries', [], { title: 'Séries em Breve', subtitle: 'Nenhuma série encontrada. Volte mais tarde!' });
+                            break;
                     }
+                    DOMElements.mobileNav.classList.remove('active'); // Fecha o menu lateral
+                });
+
+                // Listener de cliques global para modais e botões
+                document.addEventListener('click', (e) => {
+                    const target = e.target;
+                    const detailsBtn = target.closest('.details-btn');
+                    if (detailsBtn) return showDetailsModal(detailsBtn.dataset.movieId);
+
+                    const watchBtn = target.closest('.watch-btn');
+                    if (watchBtn) return openPlayerModal(watchBtn.dataset.movieId);
                     
-                    const listBtn = e.target.closest('.add-to-list-btn');
-                    if (listBtn) {
-                        toggleMovieInList(listBtn.dataset.movieId);
-                        return;
-                    }
+                    const listBtn = target.closest('.add-to-list-btn');
+                    if (listBtn) return toggleMovieInList(listBtn.dataset.movieId);
                     
-                    if (!DOMElements.profileDropdownContainer.contains(e.target)) {
+                    if (!DOMElements.profileDropdownContainer.contains(target)) {
                         DOMElements.profileMenu.classList.add('hidden');
                     }
                 });
