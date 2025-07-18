@@ -293,13 +293,24 @@
                         carouselWrapper.innerHTML += createCarouselHTML(carouselConfig.title, items);
                     }
                 });
+                setupCarouselNavigation();
+                lucide.createIcons();
             }
 
             function createCarouselHTML(title, items) {
                 return `
                     <section class="container mx-auto px-4 sm:px-6 lg:px-8">
                         <h2 class="text-2xl md:text-3xl font-bold mb-4">${title}</h2>
-                        <div class="relative"><div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4">${items.map(createItemCardHTML).join('')}</div></div>
+                        <div class="relative group">
+                            <div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4 scroll-smooth">${items.map(createItemCardHTML).join('')}</div>
+                            
+                            <button class="carousel-prev absolute top-1/2 -translate-y-1/2 left-2 w-12 h-12 bg-black/40 text-white rounded-full z-10 hover:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-0 disabled:cursor-not-allowed lg:flex items-center justify-center hidden">
+                                <i data-lucide="chevron-left" class="w-8 h-8"></i>
+                            </button>
+                            <button class="carousel-next absolute top-1/2 -translate-y-1/2 right-2 w-12 h-12 bg-black/40 text-white rounded-full z-10 hover:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-0 disabled:cursor-not-allowed lg:flex items-center justify-center hidden">
+                                <i data-lucide="chevron-right" class="w-8 h-8"></i>
+                            </button>
+                        </div>
                     </section>`;
             }
 
@@ -540,6 +551,47 @@
 
 
             // --- FUNÇÕES DE UTILIDADE E LÓGICA ---
+            function setupCarouselNavigation() {
+                document.querySelectorAll('.relative.group').forEach(container => {
+                    const prevBtn = container.querySelector('.carousel-prev');
+                    const nextBtn = container.querySelector('.carousel-next');
+                    const carousel = container.querySelector('.carousel-container');
+
+                    if (!prevBtn || !nextBtn || !carousel) return;
+
+                    const updateButtonsState = () => {
+                        const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+                        
+                        if (maxScrollLeft <= 1) {
+                            prevBtn.classList.add('hidden');
+                            nextBtn.classList.add('hidden');
+                            return;
+                        }
+                        
+                        prevBtn.classList.remove('hidden');
+                        nextBtn.classList.remove('hidden');
+
+                        prevBtn.disabled = carousel.scrollLeft <= 0;
+                        nextBtn.disabled = carousel.scrollLeft >= maxScrollLeft - 1;
+                    };
+
+                    nextBtn.addEventListener('click', () => {
+                        carousel.scrollBy({ left: carousel.clientWidth * 0.9, behavior: 'smooth' });
+                    });
+
+                    prevBtn.addEventListener('click', () => {
+                        carousel.scrollBy({ left: -carousel.clientWidth * 0.9, behavior: 'smooth' });
+                    });
+                    
+                    carousel.addEventListener('scroll', () => requestAnimationFrame(updateButtonsState));
+                    
+                    const observer = new ResizeObserver(updateButtonsState);
+                    observer.observe(carousel);
+                    
+                    setTimeout(updateButtonsState, 300);
+                });
+            }
+
             const saveMyList = () => localStorage.setItem('myList', JSON.stringify(myList));
 
             function toggleMovieInList(movieId) {
