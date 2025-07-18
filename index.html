@@ -121,18 +121,13 @@
         </div>
     </div>
     
-    <!-- Modal de Detalhes de Filme -->
-    <div id="details-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
-        <div id="details-modal-content" class="rounded-lg relative w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="background-color: var(--card-bg);"></div>
-    </div>
-    
     <!-- Modal do Leitor de Vídeo -->
     <div id="player-modal" class="modal fixed inset-0 bg-black z-[51] flex flex-col">
-        <div class="flex items-center justify-between p-4 bg-black/50">
+        <div class="flex items-center justify-between p-4 bg-black/50 absolute top-0 left-0 right-0 z-10">
             <h2 id="player-title" class="text-lg font-semibold text-white"></h2>
             <button id="close-player-modal" class="p-2"><i data-lucide="x" class="text-white"></i></button>
         </div>
-        <div id="player-container" class="w-full h-full flex-1"></div>
+        <div id="player-container" class="w-full h-full flex-1 relative"></div>
     </div>
     
     <!-- Overlay de Perfil Mobile -->
@@ -172,9 +167,21 @@
                 ],
                 series: [
                     {
+                        id: "coracao-de-ferro", title: "Coração de Ferro", year: "2025", cover: "https://m.media-amazon.com/images/M/MV5BN2EzMGZhOTktYjVhZi00NmIwLWIxZDEtNWUxZTQyNjhkYWQ4XkEyXkFqcGc@._V1_.jpg", backdrop: "https://image.tmdb.org/t/p/original/uW8fcacKbGEJKeUmmveSdzMWf1U.jpg",
+                        synopsis: "Riri Williams, uma estudante genial do MIT, cria a armadura mais avançada desde o Homem de Ferro.",
+                        genres: ["Ação", "Aventura", "Ficção Científica"], dateAdded: '2025-07-20',
+                        seasons: [
+                            { id: "ironheart-s1", title: "Temporada 1", episodes: [
+                                { videoUrl: "https://f005.backblazeb2.com/file/s7rave/serie%20cora%C3%A7ao%20de%20ferro/Cora%C3%A7%C3%A3o.De.Ferro.S01e01.1080P.X264.Web-Dl.Dual-Sf.mp4", title: "Episódio 1" },
+                                { videoUrl: "https://f005.backblazeb2.com/file/s7rave/serie%20cora%C3%A7ao%20de%20ferro/Cora%C3%A7%C3%A3o.De.Ferro.S01e02.1080P.X264.Web-Dl.Dual-Sf.mp4", title: "Episódio 2" },
+                                { videoUrl: "https://f005.backblazeb2.com/file/s7rave/serie%20cora%C3%A7ao%20de%20ferro/Cora%C3%A7%C3%A3o.De.Ferro.S01e03.1080P.X264.Web-Dl.Dual-Sf.mp4", title: "Episódio 3" }
+                            ] }
+                        ]
+                    },
+                    {
                         id: "round-6", title: "Round 6", cover: "https://www.quadrorama.com.br/wp-content/uploads/2021/11/Round-6-Capa-bd86b0c3.png", backdrop: "https://travejante.com/wp-content/uploads/2021/10/squid-game.jpeg",
                         synopsis: "Centenas de jogadores falidos aceitam um estranho convite para competir em jogos infantis. Dentro do jogo, um prêmio tentador os espera, mas as apostas são mortais.",
-                        genres: ["Suspense", "Drama", "Ação"], dateAdded: '2025-07-18',
+                        genres: ["Suspense", "Drama", "Ação"], dateAdded: '2025-07-19',
                         seasons: [
                             { id: "round-6-s1", title: "Temporada 1", episodes: [ 
                                 { videoUrl: "https://1a-1791.com/video/fwe2/bc/s8/2/c/i/O/8/ciO8v.haa.mp4", title: "Episódio 1" }, 
@@ -217,18 +224,6 @@
                         ]
                     },
                     {
-                        id: "coracao-de-ferro", title: "Coração de Ferro", year: "2025", cover: "https://m.media-amazon.com/images/M/MV5BN2EzMGZhOTktYjVhZi00NmIwLWIxZDEtNWUxZTQyNjhkYWQ4XkEyXkFqcGc@._V1_.jpg", backdrop: "https://image.tmdb.org/t/p/original/uW8fcacKbGEJKeUmmveSdzMWf1U.jpg",
-                        synopsis: "Riri Williams, uma estudante genial do MIT, cria a armadura mais avançada desde o Homem de Ferro.",
-                        genres: ["Ação", "Aventura", "Ficção Científica"], dateAdded: '2025-07-18',
-                        seasons: [
-                            { id: "ironheart-s1", title: "Temporada 1", episodes: [
-                                { videoUrl: "https://f005.backblazeb2.com/file/s7rave/serie%20cora%C3%A7ao%20de%20ferro/Cora%C3%A7%C3%A3o.De.Ferro.S01e01.1080P.X264.Web-Dl.Dual-Sf.mp4", title: "Episódio 1" },
-                                { videoUrl: "https://f005.backblazeb2.com/file/s7rave/serie%20cora%C3%A7ao%20de%20ferro/Cora%C3%A7%C3%A3o.De.Ferro.S01e02.1080P.X264.Web-Dl.Dual-Sf.mp4", title: "Episódio 2" },
-                                { videoUrl: "https://f005.backblazeb2.com/file/s7rave/serie%20cora%C3%A7ao%20de%20ferro/Cora%C3%A7%C3%A3o.De.Ferro.S01e03.1080P.X264.Web-Dl.Dual-Sf.mp4", title: "Episódio 3" }
-                            ] }
-                        ]
-                    },
-                    {
                         id: "pica-pau", title: "Pica-Pau", cover: "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/aXgyvCWLPkbZUCYR822KLsKZXgt.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg",
                         synopsis: "As aventuras clássicas e hilárias do Pica-Pau, um pássaro icônico conhecido por sua risada contagiante e suas travessuras intermináveis contra seus adversários.",
                         genres: ["Animação", "Comédia", "Família"], dateAdded: '2025-07-01',
@@ -250,7 +245,7 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -263,20 +258,23 @@
             }
 
             function renderHero() {
-                const heroMovie = db.movies[0];
+                const heroItem = db.series[0]; // Agora o herói é a primeira série
+                const isMovie = !!heroItem.director;
                 DOMElements.heroSection.innerHTML = `
-                    <div class="absolute inset-0"><img src="${heroMovie.backdrop}" alt="${heroMovie.title}" class="w-full h-full object-cover"><div class="absolute inset-0 hero-gradient-left"></div><div class="absolute inset-0 hero-gradient-bottom"></div></div>
+                    <div class="absolute inset-0"><img src="${heroItem.backdrop}" alt="${heroItem.title}" class="w-full h-full object-cover"><div class="absolute inset-0 hero-gradient-left"></div><div class="absolute inset-0 hero-gradient-bottom"></div></div>
                     <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="max-w-xl">
-                            <h1 class="text-4xl md:text-6xl font-extrabold my-3" style="color: var(--hero-text-primary);">${heroMovie.title}</h1>
-                            <p class="text-lg md:text-xl mb-6 leading-relaxed" style="color: var(--hero-text-secondary);">${heroMovie.synopsis}</p>
+                            <h1 class="text-4xl md:text-6xl font-extrabold my-3" style="color: var(--hero-text-primary);">${heroItem.title}</h1>
+                            <p class="text-lg md:text-xl mb-6 leading-relaxed" style="color: var(--hero-text-secondary);">${heroItem.synopsis}</p>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                                <button class="details-btn flex items-center justify-center bg-white text-black font-bold py-3.5 px-8 rounded-md transition hover:bg-gray-300" data-movie-id="${heroMovie.id}"><i data-lucide="info" class="mr-2"></i>Mais Informações</button>
-                                <button class="add-to-list-btn flex items-center justify-center bg-gray-500 bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm font-bold py-3.5 px-8 rounded-full transition duration-300" style="color: var(--hero-text-primary);" data-movie-id="${heroMovie.id}"></button>
+                                <button class="${isMovie ? 'details-btn' : 'series-card'} flex items-center justify-center bg-white text-black font-bold py-3.5 px-8 rounded-md transition hover:bg-gray-300" data-${isMovie ? 'movie' : 'series'}-id="${heroItem.id}"><i data-lucide="info" class="mr-2"></i>Mais Informações</button>
+                                ${isMovie ? `<button class="add-to-list-btn flex items-center justify-center bg-gray-500 bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm font-bold py-3.5 px-8 rounded-full transition duration-300" style="color: var(--hero-text-primary);" data-movie-id="${heroItem.id}"></button>` : ''}
                             </div>
                         </div>
                     </div>`;
-                updateAddToListButton(DOMElements.heroSection.querySelector('.add-to-list-btn'));
+                if (isMovie) {
+                    updateAddToListButton(DOMElements.heroSection.querySelector('.add-to-list-btn'));
+                }
             }
 
             function renderAllCarousels() {
@@ -315,12 +313,8 @@
             }
 
             function createItemCardHTML(item) {
-                const isMovie = !!item.director; // Checa se é filme pela propriedade director
-                if (isMovie) {
-                    return createCarouselMovieCardHTML(item);
-                } else {
-                    return createCarouselSeriesCardHTML(item);
-                }
+                const isMovie = !!item.director;
+                return isMovie ? createCarouselMovieCardHTML(item) : createCarouselSeriesCardHTML(item);
             }
 
             function createCarouselMovieCardHTML(movie) {
@@ -362,30 +356,36 @@
                 lucide.createIcons();
             }
 
-            function showDetailsModal(movieId) {
+            function renderMovieDetailsPage(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
-                
+
+                DOMElements.heroSection.style.display = 'none';
+                DOMElements.contentContainer.className = '';
+                updateActiveNav('');
+
                 const castUrl = `wvc-x-callback://open?url=${encodeURIComponent(movie.url)}&title=${encodeURIComponent(movie.title)}`;
 
-                DOMElements.detailsModal.content.innerHTML = `
-                    <div class="relative">
-                        <img src="${movie.backdrop}" alt="${movie.title}" class="w-full h-48 md:h-72 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/e5e7eb?text=Imagem+Indisponível';">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div>
-                        <button id="close-details-modal" class="absolute top-3 right-3 bg-black/50 rounded-full p-1.5"><i data-lucide="x"></i></button>
+                DOMElements.contentContainer.innerHTML = `
+                    <div class="relative w-full h-[40vh] md:h-[60vh]">
+                        <button id="back-button" class="absolute top-4 left-4 z-20 bg-black/50 rounded-full p-2 hover:bg-black/70 transition"><i data-lucide="arrow-left"></i></button>
+                        <img src="${movie.backdrop}" alt="${movie.title}" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-4 md:p-8 container mx-auto">
+                            <h2 class="text-3xl md:text-5xl font-bold" style="color: var(--hero-text-primary); text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">${movie.title} (${movie.year})</h2>
+                            <p class="max-w-2xl mt-2 text-sm" style="color: var(--hero-text-secondary); text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">${movie.synopsis}</p>
+                        </div>
                     </div>
-                    <div class="p-4 md:p-6">
-                        <h2 class="text-3xl font-bold">${movie.title} (${movie.year})</h2>
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
                         <div class="flex flex-wrap items-center my-2 gap-x-4 gap-y-2 text-sm" style="color: var(--text-secondary)">
                             <div class="flex items-center text-yellow-400">${'★'.repeat(Math.round(movie.rating))}${'☆'.repeat(5 - Math.round(movie.rating))} <span class="ml-2" style="color: var(--text-primary);">${movie.rating}</span></div>
                             <span>${movie.genres.join(', ')}</span>
                         </div>
-                        <p class="my-4">${movie.synopsis}</p>
-                        <div class="text-sm space-y-1">
+                        <div class="text-sm space-y-1 mt-4">
                             <p><strong style="color: var(--text-primary)">Diretor:</strong> ${movie.director}</p>
                             <p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p>
                         </div>
-                        <div class="flex flex-wrap gap-3 mt-6">
+                         <div class="flex flex-wrap gap-3 mt-6">
                             <button class="watch-btn flex-grow flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
                             <button class="add-to-list-btn flex-grow flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button>
                             <a href="${castUrl}" class="p-3 flex items-center justify-center border rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" title="Transmitir"><i data-lucide="cast"></i></a>
@@ -402,12 +402,12 @@
                             </form>
                             <div class="comments-section mt-4 space-y-3"></div>
                         </div>
-                    </div>`;
+                    </div>
+                `;
                 
-                updateAddToListButton(DOMElements.detailsModal.content.querySelector('.add-to-list-btn'));
-                DOMElements.detailsModal.container.classList.add('active');
+                document.getElementById('back-button').onclick = renderHomePage;
+                updateAddToListButton(DOMElements.contentContainer.querySelector('.add-to-list-btn'));
                 lucide.createIcons();
-                document.getElementById('close-details-modal').onclick = () => DOMElements.detailsModal.container.classList.remove('active');
                 setupRatingAndComments(`movie-${movie.id}`);
             }
             
@@ -416,13 +416,54 @@
                 if (!movie) return;
                 DOMElements.playerModal.title.textContent = movie.title;
                 DOMElements.playerModal.playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
-                DOMElements.detailsModal.container.classList.remove('active');
                 DOMElements.playerModal.container.classList.add('active');
             }
 
-            function openPlayerModalForEpisode(videoUrl, title) {
-                DOMElements.playerModal.title.textContent = title;
-                DOMElements.playerModal.playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${videoUrl}" controls autoplay></video>`;
+            function openPlayerModalForEpisode(seriesId, seasonId, episodeIndex) {
+                const series = db.series.find(s => s.id === seriesId);
+                const season = series?.seasons.find(s => s.id === seasonId);
+                const episode = season?.episodes[episodeIndex];
+
+                if (!episode) return;
+
+                const playEpisode = (index) => {
+                    const currentEpisode = season.episodes[index];
+                    if (!currentEpisode) {
+                        closePlayerModal();
+                        return;
+                    }
+
+                    DOMElements.playerModal.title.textContent = `${series.title} - ${currentEpisode.title}`;
+                    DOMElements.playerModal.playerContainer.innerHTML = `
+                        <video id="player-video" class="w-full h-full" src="${currentEpisode.videoUrl}" controls autoplay></video>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between z-20">
+                            <button id="prev-episode-btn" class="p-3 bg-black/50 rounded-full hover:bg-black/70 transition disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="skip-back"></i></button>
+                            <button id="next-episode-btn" class="p-3 bg-black/50 rounded-full hover:bg-black/70 transition disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="skip-forward"></i></button>
+                        </div>
+                    `;
+
+                    const video = document.getElementById('player-video');
+                    const prevBtn = document.getElementById('prev-episode-btn');
+                    const nextBtn = document.getElementById('next-episode-btn');
+
+                    video.onended = () => {
+                        if (index < season.episodes.length - 1) {
+                            playEpisode(index + 1);
+                        } else {
+                            closePlayerModal();
+                        }
+                    };
+
+                    prevBtn.disabled = index === 0;
+                    nextBtn.disabled = index >= season.episodes.length - 1;
+
+                    prevBtn.onclick = () => playEpisode(index - 1);
+                    nextBtn.onclick = () => playEpisode(index + 1);
+                    
+                    lucide.createIcons();
+                };
+
+                playEpisode(episodeIndex);
                 DOMElements.playerModal.container.classList.add('active');
             }
 
@@ -446,7 +487,7 @@
                 if (!series) return;
 
                 DOMElements.heroSection.style.display = 'none';
-                DOMElements.contentContainer.className = ''; // Remove padding for full-width hero
+                DOMElements.contentContainer.className = '';
                 updateActiveNav('');
 
                 const seasonOptionsHTML = series.seasons.map(season => `
@@ -455,6 +496,7 @@
 
                 DOMElements.contentContainer.innerHTML = `
                     <div class="relative w-full h-[40vh] md:h-[60vh]">
+                         <button id="back-button" class="absolute top-4 left-4 z-20 bg-black/50 rounded-full p-2 hover:bg-black/70 transition"><i data-lucide="arrow-left"></i></button>
                         <img src="${series.backdrop}" alt="${series.title}" class="absolute inset-0 w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent"></div>
                         <div class="absolute bottom-0 left-0 p-4 md:p-8 container mx-auto">
@@ -482,6 +524,7 @@
                         </div>
                     </div>
                 `;
+                document.getElementById('back-button').onclick = renderHomePage;
 
                 const renderEpisodes = (seasonId) => {
                     const season = series.seasons.find(s => s.id === seasonId);
@@ -495,7 +538,7 @@
                             <div class="flex items-center gap-2">
                                 <a href="${castUrl}" class="p-2 rounded-full hover:bg-[var(--card-hover-bg)]" title="Transmitir"><i data-lucide="cast" class="w-5 h-5"></i></a>
                                 <a href="${ep.videoUrl}" download="${ep.title}" class="p-2 rounded-full hover:bg-[var(--card-hover-bg)]" title="Baixar"><i data-lucide="download" class="w-5 h-5"></i></a>
-                                <button class="episode-item p-2 rounded-full hover:bg-[var(--card-hover-bg)]" data-video-url="${ep.videoUrl}" data-video-title="${ep.title}" title="Assistir">
+                                <button class="episode-item p-2 rounded-full hover:bg-[var(--card-hover-bg)]" data-series-id="${series.id}" data-season-id="${season.id}" data-episode-index="${index}" title="Assistir">
                                     <i data-lucide="play-circle" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -790,7 +833,7 @@
                     const detailsBtn = target.closest('.details-btn');
                     if (detailsBtn) {
                         DOMElements.searchModal.container.classList.remove('active');
-                        return showDetailsModal(detailsBtn.dataset.movieId);
+                        return renderMovieDetailsPage(detailsBtn.dataset.movieId);
                     }
 
                     const watchBtn = target.closest('.watch-btn');
@@ -806,7 +849,10 @@
                     }
 
                     const episodeItem = target.closest('.episode-item');
-                    if (episodeItem) return openPlayerModalForEpisode(episodeItem.dataset.videoUrl, episodeItem.dataset.videoTitle);
+                    if (episodeItem) {
+                        const { seriesId, seasonId, episodeIndex } = episodeItem.dataset;
+                        return openPlayerModalForEpisode(seriesId, seasonId, parseInt(episodeIndex));
+                    }
 
                     const genreBtn = target.closest('.genre-btn');
                     if (genreBtn) return renderGenreResults(genreBtn.dataset.genre);
