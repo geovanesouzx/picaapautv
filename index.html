@@ -74,7 +74,9 @@
                     <div class="relative" id="profile-dropdown-container">
                         <button id="profile-button" class="w-9 h-9 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full overflow-hidden" title="Perfil"><img src="https://placehold.co/40x40/ffffff/333333?text=A" alt="Avatar do Utilizador" class="w-full h-full object-cover"></button>
                         <div id="profile-menu" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="background-color: var(--card-bg)">
-                            <button id="theme-toggle" class="w-full text-left px-4 py-2 text-sm hoverable-item flex items-center justify-between">Tema <i data-lucide="sun" class="w-4 h-4"></i></button>
+                            <a href="#" class="w-full text-left px-4 py-2 text-sm hoverable-item flex items-center gap-2"><i data-lucide="user-2" class="w-4 h-4"></i>Conta</a>
+                            <a href="#" id="desktop-settings-btn" class="w-full text-left px-4 py-2 text-sm hoverable-item flex items-center gap-2"><i data-lucide="settings" class="w-4 h-4"></i>Configurações</a>
+                            <a href="#" class="w-full text-left px-4 py-2 text-sm hoverable-item flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i>Sair</a>
                         </div>
                     </div>
                 </div>
@@ -132,7 +134,14 @@
     <!-- Overlay de Perfil Mobile -->
     <div id="mobile-profile-overlay" class="modal fixed inset-0 z-50 p-4" style="background-color: var(--overlay-bg);">
         <div class="flex justify-end mb-4"><button id="close-profile-overlay"><i data-lucide="x" class="w-7 h-7"></i></button></div>
-        <div class="mt-8 flex flex-col items-center space-y-6"><h2 class="text-2xl font-bold">Perfil</h2><button id="mobile-theme-toggle" class="p-4 rounded-md text-lg flex items-center justify-center hoverable-item w-full max-w-xs">Mudar Tema <i data-lucide="sun" class="w-5 h-5 ml-2"></i></button></div>
+        <div class="mt-8 flex flex-col items-center space-y-6">
+            <h2 class="text-2xl font-bold">Perfil</h2>
+            <div class="w-full max-w-xs space-y-4">
+                <button class="p-4 rounded-md text-lg flex items-center justify-center hoverable-item w-full"><i data-lucide="user-2" class="w-5 h-5 mr-2"></i>Conta</button>
+                <button id="mobile-settings-btn" class="p-4 rounded-md text-lg flex items-center justify-center hoverable-item w-full"><i data-lucide="settings" class="w-5 h-5 mr-2"></i>Configurações</button>
+                <button class="p-4 rounded-md text-lg flex items-center justify-center hoverable-item w-full"><i data-lucide="log-out" class="w-5 h-5 mr-2"></i>Sair</button>
+            </div>
+        </div>
     </div>
     
     <!-- Modal de Busca -->
@@ -143,6 +152,28 @@
                 <button id="close-search-modal" class="ml-2 p-2"><i data-lucide="x" class="w-8 h-8"></i></button>
             </div>
             <div id="search-results" class="max-h-[80vh] overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Configurações -->
+    <div id="settings-modal" class="modal fixed inset-0 z-50 p-4 pt-16" style="background-color: var(--overlay-bg);">
+        <div class="container mx-auto max-w-2xl">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold">Configurações</h2>
+                <button id="close-settings-modal" class="ml-2 p-2"><i data-lucide="x" class="w-8 h-8"></i></button>
+            </div>
+            <div class="space-y-6 p-4 rounded-lg" style="background-color: var(--card-bg);">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="sun-moon"></i>
+                        <span class="font-semibold">Tema</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="theme-toggle-switch" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -244,11 +275,12 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), desktopSettingsBtn: document.getElementById('desktop-settings-btn'), mobileSettingsBtn: document.getElementById('mobile-settings-btn'), settingsModal: { container: document.getElementById('settings-modal'), closeBtn: document.getElementById('close-settings-modal'), themeToggle: document.getElementById('theme-toggle-switch') }, homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
             function renderHomePage() {
+                window.scrollTo(0, 0);
                 DOMElements.contentContainer.className = 'py-8 md:py-12';
                 DOMElements.heroSection.style.display = 'flex';
                 renderHero();
@@ -356,6 +388,7 @@
             }
 
             function renderMovieDetailsPage(movieId) {
+                window.scrollTo(0, 0);
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
 
@@ -480,6 +513,7 @@
             }
 
             function renderSeriesDetailsPage(seriesId) {
+                window.scrollTo(0, 0);
                 const series = db.series.find(s => s.id === seriesId);
                 if (!series) return;
 
@@ -667,25 +701,9 @@
             function toggleTheme() {
                 DOMElements.html.classList.toggle('light');
                 DOMElements.html.classList.toggle('dark');
-                localStorage.setItem('theme', DOMElements.html.classList.contains('dark') ? 'dark' : 'light');
-                if (DOMElements.heroSection.style.display === 'flex') {
-                    renderHero();
-                }
-                updateThemeIcons();
-            }
-            
-            function updateThemeIcons() {
-                const isLight = DOMElements.html.classList.contains('light');
-                const newIconName = isLight ? 'moon' : 'sun';
-                [DOMElements.themeToggle, DOMElements.mobileThemeToggle].forEach(btn => {
-                    if (btn) {
-                        const icon = btn.querySelector('i, svg');
-                        if (icon) {
-                            icon.setAttribute('data-lucide', newIconName);
-                        }
-                    }
-                });
-                lucide.createIcons();
+                const isDark = DOMElements.html.classList.contains('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                DOMElements.settingsModal.themeToggle.checked = !isDark;
             }
             
             // --- LÓGICA DE BUSCA ---
@@ -777,14 +795,21 @@
 
             function setupEventListeners() {
                 DOMElements.profileBtn.onclick = (e) => { e.stopPropagation(); DOMElements.profileMenu.classList.toggle('hidden'); };
-                DOMElements.themeToggle.onclick = toggleTheme;
                 DOMElements.hamburgerBtn.onclick = () => DOMElements.mobileNav.classList.add('active');
                 DOMElements.closeMobileNav.onclick = () => DOMElements.mobileNav.classList.remove('active');
                 
                 DOMElements.mobileProfileBtn.onclick = () => DOMElements.mobileProfileOverlay.classList.add('active');
                 DOMElements.closeProfileOverlay.onclick = () => DOMElements.mobileProfileOverlay.classList.remove('active');
-                DOMElements.mobileThemeToggle.onclick = toggleTheme;
                 
+                const openSettings = () => {
+                    DOMElements.settingsModal.container.classList.add('active');
+                    DOMElements.mobileProfileOverlay.classList.remove('active');
+                };
+                DOMElements.desktopSettingsBtn.onclick = openSettings;
+                DOMElements.mobileSettingsBtn.onclick = openSettings;
+                DOMElements.settingsModal.closeBtn.onclick = () => DOMElements.settingsModal.container.classList.remove('active');
+                DOMElements.settingsModal.themeToggle.onchange = toggleTheme;
+
                 // Navegação Principal
                 DOMElements.homeLink.onclick = (e) => { e.preventDefault(); renderHomePage(); };
                 DOMElements.desktopListBtn.onclick = renderMyListPage;
@@ -863,12 +888,14 @@
             }
             
             function init() {
-                const savedTheme = localStorage.getItem('theme');
-                if (savedTheme === 'light') DOMElements.html.classList.replace('dark', 'light');
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                if (savedTheme === 'light') {
+                    DOMElements.html.classList.replace('dark', 'light');
+                }
+                DOMElements.settingsModal.themeToggle.checked = savedTheme === 'light';
                 
                 renderHomePage();
                 setupEventListeners();
-                updateThemeIcons();
                 lucide.createIcons();
                 DOMElements.loadingSpinner.style.display = 'none';
             }
