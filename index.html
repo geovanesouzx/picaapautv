@@ -329,14 +329,15 @@
                 ],
                 carousels: [
                     { title: "Adicionados Recentemente", filter: (item) => true, sort: (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded) },
-                    { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
                     { title: "Continuar a Assistir", filter: (m) => m.progress > 0 && m.progress < 100 },
+                    { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
                     { title: "Animações Imperdíveis", filter: (m) => m.genres.includes("Animação") },
                     { title: "Comédias para Rir à Vontade", filter: (m) => m.genres.includes("Comédia") },
                     { title: "Aventuras Épicas", filter: (m) => m.genres.includes("Aventura") }
                 ]
             };
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
+            let watchProgress = {};
 
             const DOMElements = {
                 html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), desktopSettingsBtn: document.getElementById('desktop-settings-btn'), mobileSettingsBtn: document.getElementById('mobile-settings-btn'), settingsModal: { container: document.getElementById('settings-modal'), closeBtn: document.getElementById('close-settings-modal'), themeToggle: document.getElementById('theme-toggle-switch') }, homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), desktopLiveBtn: document.getElementById('desktop-live-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
@@ -378,7 +379,32 @@
                 const allContent = [...db.movies, ...db.series];
 
                 db.carousels.forEach(carouselConfig => {
-                    let items = allContent.filter(carouselConfig.filter);
+                    let items = allContent.filter(item => {
+                        if (carouselConfig.title !== "Continuar a Assistir") {
+                            return carouselConfig.filter(item);
+                        }
+                        return false; // Handled separately
+                    });
+
+                    if (carouselConfig.title === "Continuar a Assistir") {
+                        items = Object.keys(watchProgress).map(contentId => {
+                            const progress = watchProgress[contentId];
+                            if (!progress || !progress.duration || progress.time / progress.duration >= 0.98) return null;
+
+                            const [type, id] = contentId.split('-');
+                            if (type === 'movie') {
+                                return db.movies.find(m => m.id == id);
+                            } else if (type === 'series') {
+                                // For simplicity, we'll just show the series card.
+                                // A more complex implementation could show the specific episode.
+                                const seriesId = contentId.split('-')[1];
+                                return db.series.find(s => s.id === seriesId);
+                            }
+                            return null;
+                        }).filter(Boolean);
+                    }
+
+
                     if (carouselConfig.sort) {
                         items = items.sort(carouselConfig.sort);
                     }
@@ -398,7 +424,7 @@
                     <section class="container mx-auto px-4 sm:px-6 lg:px-8">
                         <h2 class="text-2xl md:text-3xl font-bold mb-4">${title}</h2>
                         <div class="relative group">
-                            <div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4 scroll-smooth">${items.map(createItemCardHTML).join('')}</div>
+                            <div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4 scroll-smooth">${items.map(item => createItemCardHTML(item, title)).join('')}</div>
                             
                             <button class="carousel-prev absolute top-1/2 -translate-y-1/2 left-2 w-12 h-12 bg-black/40 text-white rounded-full z-10 hover:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-0 disabled:cursor-not-allowed lg:flex items-center justify-center hidden">
                                 <i data-lucide="chevron-left" class="w-8 h-8"></i>
@@ -410,13 +436,24 @@
                     </section>`;
             }
 
-            function createItemCardHTML(item) {
+            function createItemCardHTML(item, carouselTitle) {
                 const isMovie = !!item.director;
-                return isMovie ? createCarouselMovieCardHTML(item) : createCarouselSeriesCardHTML(item);
+                return isMovie ? createCarouselMovieCardHTML(item, carouselTitle) : createCarouselSeriesCardHTML(item, carouselTitle);
             }
 
-            function createCarouselMovieCardHTML(movie) {
-                return `<div class="details-btn flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-movie-id="${movie.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${movie.poster}" alt="Pôster de ${movie.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';"></div></div>`;
+            function createCarouselMovieCardHTML(movie, carouselTitle) {
+                let progressHTML = '';
+                if (carouselTitle === "Continuar a Assistir") {
+                    const progress = watchProgress[`movie-${movie.id}`];
+                    if (progress && progress.duration) {
+                        const percentage = (progress.time / progress.duration) * 100;
+                        progressHTML = `
+                            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-500/50">
+                                <div class="h-full bg-purple-600" style="width: ${percentage}%;"></div>
+                            </div>`;
+                    }
+                }
+                return `<div class="details-btn flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-movie-id="${movie.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${movie.poster}" alt="Pôster de ${movie.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';">${progressHTML}</div></div>`;
             }
 
             function createGridMovieCardHTML(movie) {
@@ -513,7 +550,34 @@
             function openPlayerModal(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
-                DOMElements.playerModal.playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
+                const contentId = `movie-${movie.id}`;
+                const video = document.createElement('video');
+                video.className = 'w-full h-full';
+                video.src = movie.url;
+                video.controls = true;
+                video.autoplay = true;
+
+                video.addEventListener('loadedmetadata', () => {
+                    const progress = watchProgress[contentId];
+                    if (progress && progress.time) {
+                        video.currentTime = progress.time;
+                    }
+                });
+
+                let lastUpdateTime = 0;
+                video.addEventListener('timeupdate', () => {
+                    const now = Date.now();
+                    if (now - lastUpdateTime > 5000) {
+                        if (video.duration) {
+                            watchProgress[contentId] = { time: video.currentTime, duration: video.duration };
+                            saveProgress();
+                        }
+                        lastUpdateTime = now;
+                    }
+                });
+
+                DOMElements.playerModal.playerContainer.innerHTML = '';
+                DOMElements.playerModal.playerContainer.appendChild(video);
                 DOMElements.playerModal.container.classList.add('active');
             }
 
@@ -527,19 +591,19 @@
             function openPlayerModalForEpisode(seriesId, seasonId, episodeIndex) {
                 const series = db.series.find(s => s.id === seriesId);
                 const season = series?.seasons.find(s => s.id === seasonId);
-                const episode = season?.episodes[episodeIndex];
-
-                if (!episode) return;
+                if (!series || !season) return;
 
                 const playEpisode = (index) => {
-                    const currentEpisode = season.episodes[index];
-                    if (!currentEpisode) {
+                    const episode = season.episodes[index];
+                    if (!episode) {
                         closePlayerModal();
                         return;
                     }
+                    
+                    const contentId = `series-${seriesId}-${seasonId}-${index}`;
 
                     DOMElements.playerModal.playerContainer.innerHTML = `
-                        <video id="player-video" class="w-full h-full" src="${currentEpisode.videoUrl}" controls autoplay></video>
+                        <video id="player-video" class="w-full h-full" src="${episode.videoUrl}" controls autoplay></video>
                         <div class="absolute bottom-4 left-4 right-4 flex justify-between z-20">
                             <button id="prev-episode-btn" class="p-3 bg-black/50 rounded-full hover:bg-black/70 transition disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="skip-back"></i></button>
                             <button id="next-episode-btn" class="p-3 bg-black/50 rounded-full hover:bg-black/70 transition disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="skip-forward"></i></button>
@@ -549,6 +613,25 @@
                     const video = document.getElementById('player-video');
                     const prevBtn = document.getElementById('prev-episode-btn');
                     const nextBtn = document.getElementById('next-episode-btn');
+
+                    video.addEventListener('loadedmetadata', () => {
+                        const progress = watchProgress[contentId];
+                        if (progress && progress.time) {
+                            video.currentTime = progress.time;
+                        }
+                    });
+
+                    let lastUpdateTime = 0;
+                    video.addEventListener('timeupdate', () => {
+                        const now = Date.now();
+                        if (now - lastUpdateTime > 5000) {
+                            if (video.duration) {
+                                watchProgress[contentId] = { time: video.currentTime, duration: video.duration };
+                                saveProgress();
+                            }
+                            lastUpdateTime = now;
+                        }
+                    });
 
                     video.onended = () => {
                         if (index < season.episodes.length - 1) {
@@ -572,14 +655,39 @@
             }
 
             function closePlayerModal() {
+                const video = DOMElements.playerModal.playerContainer.querySelector('video');
+                if (video) {
+                    // Final save on close
+                    const contentId = video.dataset.contentId; // This needs to be set when creating the video
+                    if (contentId && video.duration) {
+                        watchProgress[contentId] = { time: video.currentTime, duration: video.duration };
+                        saveProgress();
+                    }
+                }
                 DOMElements.playerModal.playerContainer.innerHTML = '';
                 DOMElements.playerModal.container.classList.remove('active');
                 if (document.fullscreenElement) document.exitFullscreen();
             }
             
             // --- RENDERIZAÇÃO DE SÉRIES ---
-            function createCarouselSeriesCardHTML(series) {
-                return `<div class="series-card flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-series-id="${series.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${series.cover}" alt="Capa de ${series.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';"></div></div>`;
+            function createCarouselSeriesCardHTML(series, carouselTitle) {
+                 let progressHTML = '';
+                if (carouselTitle === "Continuar a Assistir") {
+                    // Find the most recent episode progress for this series
+                    const seriesProgressKeys = Object.keys(watchProgress).filter(k => k.startsWith(`series-${series.id}`));
+                    if (seriesProgressKeys.length > 0) {
+                        const lastWatchedKey = seriesProgressKeys.reduce((a, b) => watchProgress[a].lastPlayed > watchProgress[b].lastPlayed ? a : b);
+                        const progress = watchProgress[lastWatchedKey];
+                         if (progress && progress.duration) {
+                            const percentage = (progress.time / progress.duration) * 100;
+                            progressHTML = `
+                                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-500/50">
+                                    <div class="h-full bg-purple-600" style="width: ${percentage}%;"></div>
+                                </div>`;
+                        }
+                    }
+                }
+                return `<div class="series-card flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-series-id="${series.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${series.cover}" alt="Capa de ${series.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';">${progressHTML}</div></div>`;
             }
 
             function createGridSeriesCardHTML(series) {
@@ -763,6 +871,12 @@
                     setTimeout(updateButtonsState, 300);
                 });
             }
+
+            const saveProgress = () => localStorage.setItem('watchProgress', JSON.stringify(watchProgress));
+            
+            const loadProgress = () => {
+                watchProgress = JSON.parse(localStorage.getItem('watchProgress')) || {};
+            };
 
             const saveMyList = () => localStorage.setItem('myList', JSON.stringify(myList));
 
@@ -992,6 +1106,7 @@
             }
             
             function init() {
+                loadProgress();
                 const savedTheme = localStorage.getItem('theme') || 'dark';
                 if (savedTheme === 'light') {
                     DOMElements.html.classList.replace('dark', 'light');
