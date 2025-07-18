@@ -16,11 +16,15 @@
             --background: #0c0a09; --text-primary: #e5e7eb; --text-secondary: #9ca3af;
             --card-bg: #1f2937; --header-bg: rgba(12, 10, 9, 0.7);
             --overlay-bg: rgba(12, 10, 9, 0.95);
+            --card-hover-bg: #374151; /* gray-700 */
+            --accent-color: #a855f7; /* purple-500 */
         }
         html.light {
             --background: #f3f4f6; --text-primary: #1f2937; --text-secondary: #4b5563;
             --card-bg: #ffffff; --header-bg: rgba(255, 255, 255, 0.7);
             --overlay-bg: rgba(243, 244, 246, 0.95);
+            --card-hover-bg: #e5e7eb; /* gray-200 */
+            --accent-color: #8b5cf6; /* violet-500 */
         }
         body {
             font-family: 'Poppins', sans-serif;
@@ -29,19 +33,16 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .hero-gradient-bottom { background-image: linear-gradient(to top, var(--background) 10%, rgba(12, 10, 9, 0) 100%); }
-        .hero-gradient-left { background-image: linear-gradient(to right, var(--background) 10%, rgba(12, 10, 9, 0) 100%); }
+        .hero-gradient-left { background-image: linear-gradient(to right, var(--background) 20%, transparent 100%); }
         .carousel-container { scrollbar-width: none; }
         .carousel-container::-webkit-scrollbar { display: none; }
-        .carousel-button { transition: background-color 0.3s, opacity 0.3s; }
-        .carousel-wrapper:hover .carousel-button { opacity: 1; }
-        .card-hover-details { transition: opacity 0.3s; }
-        .group:hover .card-hover-details { opacity: 1; }
-        .mobile-overlay { transition: opacity 0.3s; pointer-events: none; }
-        .mobile-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal { transition: opacity 0.3s, visibility 0.3s; visibility: hidden; opacity: 0; }
+        .modal.active { visibility: visible; opacity: 1; }
         #mobile-nav { transition: transform 0.3s ease-in-out; }
+        .hoverable-item:hover { background-color: var(--card-hover-bg); }
     </style>
 </head>
-<body class="text-gray-200 pb-20 md:pb-0">
+<body class="pb-20 md:pb-0">
 
     <!-- Cabeçalho (Desktop) -->
     <header class="fixed top-0 left-0 right-0 bg-opacity-70 backdrop-blur-md z-40" style="background-color: var(--header-bg);">
@@ -49,245 +50,243 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-8">
                     <a href="#" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
-                    <nav class="hidden lg:flex items-center space-x-6">
-                        <a href="#" class="hover:text-white transition duration-300">Início</a>
-                        <a href="#" class="hover:text-white transition duration-300">Filmes</a>
-                        <a href="#" class="hover:text-white transition duration-300">Séries</a>
-                        <div class="relative" id="genres-dropdown-container">
-                            <button id="genres-button" class="hover:text-white transition duration-300 flex items-center">Gêneros <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i></button>
-                            <div id="genres-menu" class="absolute mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="background-color: var(--card-bg)">
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-stone-700">Ação</a>
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-stone-700">Comédia</a>
-                            </div>
-                        </div>
-                    </nav>
                 </div>
                 <div class="hidden lg:flex items-center space-x-4">
-                    <div class="relative">
-                        <button id="search-button" class="hover:text-white" title="Pesquisar"><i data-lucide="search"></i></button>
-                    </div>
-                    <div class="relative">
-                        <button id="notifications-button" class="hover:text-white" title="Notificações"><i data-lucide="bell"></i></button>
-                        <div id="notifications-panel" class="absolute right-0 mt-2 w-80 rounded-md shadow-lg p-4 hidden" style="background-color: var(--card-bg)">
-                            <h4 class="font-bold mb-2">Notificações</h4>
-                            <p class="text-sm text-gray-400">"The Witcher" Temporada 3 já disponível!</p>
-                        </div>
-                    </div>
                     <div class="relative" id="profile-dropdown-container">
                         <button id="profile-button" class="w-9 h-9 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full overflow-hidden" title="Perfil"><img src="https://placehold.co/40x40/ffffff/333333?text=A" alt="Avatar do Utilizador" class="w-full h-full object-cover"></button>
                         <div id="profile-menu" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="background-color: var(--card-bg)">
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-stone-700">Conta</a>
-                            <button id="theme-toggle" class="w-full text-left px-4 py-2 text-sm hover:bg-stone-700 flex items-center justify-between">Tema <i data-lucide="sun" class="w-4 h-4"></i></button>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-stone-700">Sair</a>
+                            <button id="theme-toggle" class="w-full text-left px-4 py-2 text-sm hoverable-item flex items-center justify-between">Tema <i data-lucide="sun" class="w-4 h-4"></i></button>
                         </div>
                     </div>
                 </div>
                 <div class="lg:hidden">
-                    <button id="hamburger-button" class="text-white"><i data-lucide="menu" class="w-7 h-7"></i></button>
+                    <button id="hamburger-button"><i data-lucide="menu" class="w-7 h-7"></i></button>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Painel de Navegação Mobile -->
-    <div id="mobile-nav" class="fixed top-0 left-0 h-full w-full bg-stone-950 z-50 transform -translate-x-full lg:hidden">
+    <div id="mobile-nav" class="fixed top-0 left-0 h-full w-full z-50 transform -translate-x-full lg:hidden" style="background-color: var(--background)">
         <div class="p-4">
             <div class="flex justify-between items-center mb-8">
                 <a href="#" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
                 <button id="close-mobile-nav"><i data-lucide="x" class="w-7 h-7"></i></button>
             </div>
             <nav class="flex flex-col space-y-4 text-lg">
-                <a href="#" class="hover:text-purple-400 transition duration-300 p-2">Início</a>
-                <a href="#" class="hover:text-purple-400 transition duration-300 p-2">Filmes</a>
-                <a href="#" class="hover:text-purple-400 transition duration-300 p-2">Séries</a>
-                <a href="#" class="hover:text-purple-400 transition duration-300 p-2">Gêneros</a>
-                <a href="#" class="hover:text-purple-400 transition duration-300 p-2">Minha Lista</a>
+                <a href="#" class="p-2 rounded-md hoverable-item">Início</a>
+                <a href="#" class="p-2 rounded-md hoverable-item">Filmes</a>
+                <a href="#" class="p-2 rounded-md hoverable-item">Séries</a>
             </nav>
         </div>
     </div>
 
     <main class="overflow-x-hidden">
-        <section class="relative min-h-[60vh] md:min-h-[90vh] flex items-center">
-            <div class="absolute inset-0"><img src="https://placehold.co/1920x1080/1e293b/ffffff?text=Cena+de+Ficção+Científica" alt="Cena de filme em destaque" class="w-full h-full object-cover"><div class="absolute inset-0 hero-gradient-left"></div><div class="absolute inset-0 hero-gradient-bottom"></div></div>
-            <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="max-w-xl">
-                    <span class="text-purple-400 font-semibold">Original CineVerse</span>
-                    <h1 class="text-4xl md:text-6xl font-extrabold my-3 text-white">Cybernetic Echo</h1>
-                    <p class="text-lg md:text-xl mb-6 text-gray-300 leading-relaxed">Num futuro distópico, uma detetive precisa caçar um androide rebelde que acredita ter memórias humanas.</p>
-                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                        <button class="hero-watch-btn flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 text-white font-bold py-3.5 px-8 rounded-full transition duration-300"><i data-lucide="play" class="mr-2 fill-white"></i>Assistir</button>
-                        <button class="add-to-list-btn flex items-center justify-center bg-gray-700 bg-opacity-50 hover:bg-opacity-80 text-white font-bold py-3.5 px-8 rounded-full transition duration-300"><i data-lucide="plus" class="mr-2"></i>Minha Lista</button>
-                    </div>
-                </div>
-            </div>
+        <section id="hero-section" class="relative min-h-[60vh] md:min-h-[90vh] flex items-center">
+            <!-- Conteúdo do Herói será populado por JS -->
         </section>
 
-        <div class="py-8 md:py-12 space-y-12 md:space-y-16">
-            <section id="populares">
-                 <div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--text-primary);">Populares na CineVerse</h2></div>
-                <div class="relative carousel-wrapper">
-                    <button onclick="scrollCarousel('carousel-populares', 'left')" class="carousel-button absolute top-1/2 -translate-y-1/2 left-4 z-20 bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 hidden md:block opacity-0"><i data-lucide="chevron-left" class="w-8 h-8"></i></button>
-                    <div id="carousel-populares" class="carousel-container flex overflow-x-auto space-x-4 lg:space-x-6 pl-4 sm:pl-6 lg:pl-8 py-4" tabindex="0">
-                        <div class="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" style="background-color: var(--card-bg);">
-                            <div class="relative">
-                                <a href="detalhes.html"><img loading="lazy" src="https://placehold.co/300x450/4f46e5/ffffff?text=Filme+A" alt="Pôster do Filme" class="w-full h-auto rounded-t-lg"></a>
-                                <div class="absolute inset-0 bg-black bg-opacity-70 rounded-t-lg flex-col justify-center items-center p-4 text-center opacity-0 card-hover-details hidden md:flex">
-                                    <h3 class="font-bold text-lg">Filme A</h3>
-                                    <div class="flex space-x-2 my-2"><button class="trailer-btn p-2 bg-purple-600 rounded-full"><i data-lucide="play"></i></button><button class="add-to-list-btn p-2 bg-gray-600 rounded-full"><i data-lucide="plus"></i></button></div>
-                                </div>
-                            </div>
-                            <div class="p-3"><h3 class="font-semibold truncate text-base">Filme A</h3><div class="flex items-center text-sm text-yellow-400"><i data-lucide="star" class="w-4 h-4 fill-current"></i><span class="ml-1">4.5</span></div></div>
-                        </div>
-                        <div class="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" style="background-color: var(--card-bg);"><div class="relative"><a href="detalhes.html"><img loading="lazy" src="https://placehold.co/300x450/7c3aed/ffffff?text=Filme+B" alt="Pôster do Filme" class="w-full h-auto rounded-t-lg"></a><div class="absolute inset-0 bg-black bg-opacity-70 rounded-t-lg flex-col justify-center items-center p-4 text-center opacity-0 card-hover-details hidden md:flex"><h3 class="font-bold text-lg">Filme B</h3><div class="flex space-x-2 my-2"><button class="trailer-btn p-2 bg-purple-600 rounded-full"><i data-lucide="play"></i></button><button class="add-to-list-btn p-2 bg-gray-600 rounded-full"><i data-lucide="plus"></i></button></div></div></div><div class="p-3"><h3 class="font-semibold truncate text-base">Filme B</h3><div class="flex items-center text-sm text-yellow-400"><i data-lucide="star" class="w-4 h-4 fill-current"></i><span class="ml-1">4.2</span></div></div></div>
-                        <div class="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" style="background-color: var(--card-bg);"><div class="relative"><a href="detalhes.html"><img loading="lazy" src="https://placehold.co/300x450/0891b2/ffffff?text=Filme+C" alt="Pôster do Filme" class="w-full h-auto rounded-t-lg"></a><div class="absolute inset-0 bg-black bg-opacity-70 rounded-t-lg flex-col justify-center items-center p-4 text-center opacity-0 card-hover-details hidden md:flex"><h3 class="font-bold text-lg">Filme C</h3><div class="flex space-x-2 my-2"><button class="trailer-btn p-2 bg-purple-600 rounded-full"><i data-lucide="play"></i></button><button class="add-to-list-btn p-2 bg-gray-600 rounded-full"><i data-lucide="plus"></i></button></div></div></div><div class="p-3"><h3 class="font-semibold truncate text-base">Filme C</h3><div class="flex items-center text-sm text-yellow-400"><i data-lucide="star" class="w-4 h-4 fill-current"></i><span class="ml-1">4.8</span></div></div></div>
-                    </div>
-                    <button onclick="scrollCarousel('carousel-populares', 'right')" class="carousel-button absolute top-1/2 -translate-y-1/2 right-4 z-20 bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 hidden md:block opacity-0"><i data-lucide="chevron-right" class="w-8 h-8"></i></button>
-                </div>
-            </section>
+        <div id="carousels-container" class="py-8 md:py-12 space-y-12 md:space-y-16">
+            <!-- Carrosséis serão populados por JS -->
         </div>
     </main>
-
-    <div class="fixed bottom-0 left-0 right-0 h-20 z-40 lg:hidden" style="background-color: var(--background); border-top: 1px solid var(--card-bg);">
-        <div class="flex justify-around items-center h-full">
-            <a href="#" class="flex flex-col items-center text-purple-400 p-2"><i data-lucide="home" class="w-6 h-6 mb-1"></i><span class="text-sm">Início</span></a>
-            <button id="mobile-search-button" class="flex flex-col items-center p-2" style="color: var(--text-secondary);"><i data-lucide="search" class="w-6 h-6 mb-1"></i><span class="text-sm">Buscar</span></button>
-            <a href="#" class="flex flex-col items-center p-2" style="color: var(--text-secondary);"><i data-lucide="list-video" class="w-6 h-6 mb-1"></i><span class="text-sm">Minha Lista</span></a>
-            <button id="mobile-profile-button" class="flex flex-col items-center p-2" style="color: var(--text-secondary);"><i data-lucide="user-2" class="w-6 h-6 mb-1"></i><span class="text-sm">Perfil</span></button>
+    
+    <!-- Modal de Detalhes -->
+    <div id="details-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
+        <div id="details-modal-content" class="rounded-lg relative w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="background-color: var(--card-bg);">
+            <!-- Conteúdo do Modal de Detalhes será inserido aqui -->
         </div>
     </div>
     
-    <footer class="hidden md:block border-t mt-12" style="background-color: var(--background); border-color: var(--card-bg);"></footer>
-    <button id="back-to-top" class="fixed bottom-24 right-5 bg-purple-600 p-3 rounded-full text-white hidden md:flex z-40"><i data-lucide="arrow-up"></i></button>
-    
-    <div id="trailer-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden">
-        <div class="p-4 rounded-lg relative w-11/12 md:w-2/3 lg:w-1/2" style="background-color: var(--card-bg)">
-            <button id="close-modal" class="absolute -top-3 -right-3 bg-white text-black rounded-full p-1"><i data-lucide="x"></i></button>
-            <div class="aspect-w-16 aspect-h-9"><iframe id="trailer-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    <!-- Modal do Leitor de Vídeo -->
+    <div id="player-modal" class="modal fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-[51]">
+        <div class="p-4 rounded-lg relative w-11/12 md:w-2/3 lg:w-3/4" style="background-color: var(--card-bg)">
+            <button id="close-player-modal" class="absolute -top-3 -right-3 bg-white text-black rounded-full p-1"><i data-lucide="x"></i></button>
+            <div id="player-container" class="aspect-video">
+                <!-- Leitor de vídeo (iframe ou video) será inserido aqui -->
+            </div>
         </div>
-    </div>
-
-    <div id="mobile-search-overlay" class="mobile-overlay fixed inset-0 z-50 opacity-0 lg:hidden" style="background-color: var(--overlay-bg);">
-        <div class="p-4"><div class="flex justify-end"><button id="close-search-overlay"><i data-lucide="x" class="w-8 h-8"></i></button></div><div class="mt-8"><input type="text" placeholder="Buscar filmes, séries..." class="w-full bg-transparent border-b-2 border-purple-500 text-3xl p-2 focus:outline-none"></div></div>
-    </div>
-    
-    <div id="mobile-profile-overlay" class="mobile-overlay fixed inset-0 z-50 opacity-0 lg:hidden" style="background-color: var(--overlay-bg);">
-        <div class="p-4"><div class="flex justify-end"><button id="close-profile-overlay"><i data-lucide="x" class="w-8 h-8"></i></button></div><div class="mt-8 flex flex-col items-center space-y-6"><img src="https://placehold.co/80x80/ffffff/333333?text=A" alt="Avatar" class="w-20 h-20 rounded-full"><div class="text-center"><h3 class="text-xl font-bold">Utilizador</h3><p style="color: var(--text-secondary)">utilizador@email.com</p></div><nav class="flex flex-col w-full max-w-xs space-y-2"><a href="#" class="p-4 rounded-md text-lg text-center" style="background-color: var(--card-bg)">Conta</a><button id="mobile-theme-toggle" class="p-4 rounded-md text-lg flex items-center justify-center" style="background-color: var(--card-bg)">Mudar Tema <i data-lucide="sun" class="w-5 h-5 ml-2"></i></button><a href="#" class="p-4 rounded-md text-lg text-center" style="background-color: var(--card-bg)">Sair</a></nav></div></div>
     </div>
 
     <div id="loading-spinner" class="fixed inset-0 flex justify-center items-center z-[60]" style="background-color: var(--background);"><div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div></div>
 
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function() {
+            const db = {
+                movies: [
+                    { id: 2, title: "Pica-Pau: O Filme", year: "2017", rating: 3.8, genres: ["Comédia", "Animação", "Aventura"], director: "Alex Zamm", cast: ["Timothy Omundson", "Thaila Ayala"], synopsis: "O Pica-Pau está metido em mais uma de suas brigas por território. Os inimigos da vez são o vigarista Lance Walters e sua namorada Vanessa.", poster: "https://br.web.img2.acsta.net/pictures/17/08/25/19/04/419991.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg", playerType: 'iframe', url: "https://www.tokyvideo.com/embed/409976" },
+                    { id: 3, title: "O Segredo dos Animais", year: "2006", rating: 4.1, genres: ["Comédia", "Animação"], director: "Steve Oedekerk", cast: ["Kevin James", "Courteney Cox"], synopsis: "Quando o fazendeiro está fora, todos os animais da fazenda cantam, dançam e se divertem. Mas um dia, um novo bezerro chamado Otis chega e perturba a paz.", poster: "https://i.ibb.co/Txc5mmKp/f2fe6431067e73e3d4dd5c30a5dcaf0f6e8fb6e087d6a6038d7a20451535f49a.jpg", backdrop: "https://www.themoviedb.org/t/p/original/uN9HAmca70S2bM1t2G2xW33a5S2.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/ab/s8/2/o/e/2/s/oe2sy.gaa.mp4" },
+                    { id: 4, title: "A Nova Onda do Imperador", year: "2000", rating: 4.7, genres: ["Comédia", "Animação", "Aventura"], director: "Mark Dindal", cast: ["David Spade", "John Goodman"], synopsis: "O arrogante imperador Kuzco é transformado em uma lhama por sua poderosa conselheira, Yzma. Perdido na selva, a única chance de Kuzco de voltar para casa e reconquistar seu trono repousa em um bondoso camponês chamado Pacha.", poster: "https://image.tmdb.org/t/p/original/qqnnA0mnokmgt5dtzYz5WlLka22.jpg", backdrop: "https://www.themoviedb.org/t/p/original/tH1S52i2BH3t0bA41GoiG8I0a2.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8b/s8/2/k/P/h/x/kPhxy.caa.mp4" },
+                    { id: 5, title: "Orion e o Escuro", year: "2024", rating: 4.6, genres: ["Animação", "Aventura", "Fantasia"], director: "Sean Charmatz", cast: ["Jacob Tremblay", "Paul Walter Hauser"], synopsis: "Um garoto com uma imaginação ativa enfrenta seus medos em uma jornada inesquecível pela noite com seu novo amigo: uma criatura gigante e sorridente chamada Escuro.", poster: "https://image.tmdb.org/t/p/original/qSN76JBBTZ3JjhFYVhvrgGLvjsq.jpg", backdrop: "https://www.themoviedb.org/t/p/original/ehumqaSROy2aN4zJ4n022yL2gA.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/ae/s8/2/4/B/G/w/4BGwy.gaa.mp4" },
+                    { id: 6, title: "Patos!", year: "2023", rating: 4.4, genres: ["Animação", "Aventura", "Comédia"], director: "Benjamin Renner", cast: ["Kumail Nanjiani", "Elizabeth Banks"], synopsis: "Uma família de patos tenta convencer seu pai superprotetor a embarcar nas férias de suas vidas e migrar para o sul durante o inverno.", poster: "https://i.ibb.co/6ccXQW8v/d-Mm-BIb-NA2qt-Wau-Gc-Mo-SJav-Fi-Dv2.jpg", backdrop: "https://www.themoviedb.org/t/p/original/ Meyvn5y4n0d6rS2Sj4T2KiqbL0b.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/26/s8/2/G/0/G/w/G0Gwy.gaa.mp4" },
+                    { id: 7, title: "WiFi Ralph", year: "2018", rating: 4.3, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Seis anos após os eventos de 'Detona Ralph', Ralph e Vanellope, agora amigos, descobrem um roteador wi-fi em seu fliperama, levando-os a uma nova aventura.", poster: "https://i.ibb.co/VpWmFd17/88po-TBTaf-MXaz73v-Yi3c74g0y2k.jpg", backdrop: "https://www.themoviedb.org/t/p/original/88poTBTafMXaz73vYi3c74g0y2k.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/45/s8/2/6/1/J/w/61Jwy.gaa.mp4" },
+                    { id: 8, title: "Detona Ralph", year: "2012", rating: 4.5, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Um vilão de videogame quer provar que pode ser um herói e parte em uma jornada por diferentes jogos, causando estragos por onde passa.", poster: "https://image.tmdb.org/t/p/original/hEIyL9G7QpXKEonUx2HAHRZ1Yqc.jpg", backdrop: "https://www.themoviedb.org/t/p/original/3GgS22uQWJbT32t22L83WnZl9lQ.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/b0/s8/2/0/1/J/w/01Jwy.gaa.mp4" },
+                    { id: 9, title: "Enrolados", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Romance"], director: "Nathan Greno", cast: ["Mandy Moore", "Zachary Levi"], synopsis: "A espirituosa e fugitiva Rapunzel, com seu cabelo mágico de 21 metros de comprimento, se esconde em uma torre. Ela faz um acordo com o charmoso ladrão Flynn Rider para explorar o mundo exterior.", poster: "https://image.tmdb.org/t/p/original/mUQBWnG6zDeoD0TfAq0InjQRmSm.jpg", backdrop: "https://www.themoviedb.org/t/p/original/53YkP2K5j6eI4PvyH4sS1kYd5Y.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/5f/s8/2/g/J/K/t/gJKty.gaa.mp4" },
+                    { id: 10, title: "Elementos", year: "2023", rating: 4.6, genres: ["Animação", "Comédia", "Fantasia", "Romance"], director: "Peter Sohn", cast: ["Leah Lewis", "Mamoudou Athie"], synopsis: "Em uma cidade onde os residentes de fogo, água, terra e ar vivem juntos, uma jovem impetuosa de fogo e um rapaz tranquilo que segue o fluxo descobrem algo elementar: o quanto eles realmente têm em comum.", poster: "https://image.tmdb.org/t/p/original/67kvbJTMhqneAfRHbukdjAKuS76.jpg", backdrop: "https://www.themoviedb.org/t/p/original/96SvkxPe2M22om2q0a92xKNflxQ.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/eb/s8/2/c/y/v/u/cyvuy.gaa.mp4" },
+                    { id: 11, title: "Moana 2", year: "2024", rating: 4.9, genres: ["Animação", "Aventura", "Fantasia"], director: "David G. Derrick Jr.", cast: ["Auli'i Cravalho", "Dwayne Johnson"], synopsis: "Moana embarca em uma nova e expansiva jornada com Maui e uma nova tripulação de marinheiros improváveis. Depois de receber um chamado inesperado de seus ancestrais, Moana deve viajar para os mares distantes da Oceania.", poster: "https://image.tmdb.org/t/p/original/e7W9DlmFQkIvqxPZOIEjH2t34Mt.jpg", backdrop: "https://www.themoviedb.org/t/p/original/5AK5zru2s4I402e82Q2rF21a24.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/04/s8/2/s/x/t/s/sxtsy.gaa.mp4" }
+                ],
+                carousels: [
+                    { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
+                    { title: "Animações Imperdíveis", filter: (m) => m.genres.includes("Animação") },
+                    { title: "Comédias para Rir à Vontade", filter: (m) => m.genres.includes("Comédia") },
+                    { title: "Aventuras Épicas", filter: (m) => m.genres.includes("Aventura") }
+                ]
+            };
 
-        const DOMElements = {
-            html: document.documentElement,
-            loadingSpinner: document.getElementById('loading-spinner'),
-            header: {
-                searchBtn: document.getElementById('search-button'),
-                genresBtn: document.getElementById('genres-button'),
-                genresMenu: document.getElementById('genres-menu'),
-                notificationsBtn: document.getElementById('notifications-button'),
-                notificationsPanel: document.getElementById('notifications-panel'),
-                profileBtn: document.getElementById('profile-button'),
-                profileMenu: document.getElementById('profile-menu'),
-                themeToggle: document.getElementById('theme-toggle'),
-            },
-            mobile: {
-                hamburgerBtn: document.getElementById('hamburger-button'),
-                navPanel: document.getElementById('mobile-nav'),
-                closeNavBtn: document.getElementById('close-mobile-nav'),
-                bottomSearchBtn: document.getElementById('mobile-search-button'),
-                searchOverlay: document.getElementById('mobile-search-overlay'),
-                closeSearchBtn: document.getElementById('close-search-overlay'),
-                bottomProfileBtn: document.getElementById('mobile-profile-button'),
-                profileOverlay: document.getElementById('mobile-profile-overlay'),
-                closeProfileBtn: document.getElementById('close-profile-overlay'),
-                themeToggle: document.getElementById('mobile-theme-toggle'),
-            },
-            trailerModal: {
-                container: document.getElementById('trailer-modal'),
-                closeBtn: document.getElementById('close-modal'),
-                iframe: document.getElementById('trailer-iframe'),
-            },
-            backToTopBtn: document.getElementById('back-to-top'),
-            allTrailerBtns: document.querySelectorAll('.trailer-btn, .hero-watch-btn'),
-            allAddToListBtns: document.querySelectorAll('.add-to-list-btn'),
-        };
+            const DOMElements = {
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, carouselsContainer: document.getElementById('carousels-container'), heroSection: document.getElementById('hero-section')
+            };
 
-        const toggleDropdown = (menu, container) => {
-            menu.classList.toggle('hidden');
-            document.addEventListener('click', (e) => {
-                if (!container.contains(e.target)) menu.classList.add('hidden');
-            }, { once: true });
-        };
+            function renderHero() {
+                const heroMovie = db.movies[0];
+                DOMElements.heroSection.innerHTML = `
+                    <div class="absolute inset-0"><img src="${heroMovie.backdrop}" alt="${heroMovie.title}" class="w-full h-full object-cover"><div class="absolute inset-0 hero-gradient-left"></div><div class="absolute inset-0 hero-gradient-bottom"></div></div>
+                    <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-xl">
+                            <h1 class="text-4xl md:text-6xl font-extrabold my-3 text-white">${heroMovie.title}</h1>
+                            <p class="text-lg md:text-xl mb-6 leading-relaxed text-gray-200">${heroMovie.synopsis}</p>
+                            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                                <button class="details-btn flex items-center justify-center bg-white text-black font-bold py-3.5 px-8 rounded-md transition hover:bg-gray-300" data-movie-id="${heroMovie.id}"><i data-lucide="info" class="mr-2"></i>Mais Informações</button>
+                            </div>
+                        </div>
+                    </div>`;
+            }
 
-        const toggleTheme = () => {
-            DOMElements.html.classList.toggle('light');
-            DOMElements.html.classList.toggle('dark');
-            const isLight = DOMElements.html.classList.contains('light');
-            const iconName = isLight ? 'moon' : 'sun';
-            [DOMElements.header.themeToggle, DOMElements.mobile.themeToggle].forEach(btn => {
-                btn.querySelector('i').setAttribute('data-lucide', iconName);
-            });
-            lucide.createIcons();
-        };
+            function renderAllCarousels() {
+                DOMElements.carouselsContainer.innerHTML = '';
+                db.carousels.forEach(carouselConfig => {
+                    const movies = db.movies.filter(carouselConfig.filter);
+                    if (movies.length > 0) {
+                        DOMElements.carouselsContainer.innerHTML += createCarouselHTML(carouselConfig.title, movies);
+                    }
+                });
+            }
 
-        const openTrailerModal = () => {
-            DOMElements.trailerModal.iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0";
-            DOMElements.trailerModal.container.classList.remove('hidden');
-        };
+            function createCarouselHTML(title, movies) {
+                return `
+                    <section class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-4">${title}</h2>
+                        <div class="relative"><div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4">${movies.map(createMovieCardHTML).join('')}</div></div>
+                    </section>`;
+            }
 
-        const closeTrailerModal = () => {
-            DOMElements.trailerModal.iframe.src = "";
-            DOMElements.trailerModal.container.classList.add('hidden');
-        };
+            function createMovieCardHTML(movie) {
+                return `
+                    <div class="details-btn flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-movie-id="${movie.id}">
+                        <div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);">
+                            <img loading="lazy" src="${movie.poster}" alt="Pôster de ${movie.title}" class="w-full h-full object-cover">
+                        </div>
+                    </div>`;
+            }
+            
+            function showDetailsModal(movieId) {
+                const movie = db.movies.find(m => m.id == movieId);
+                if (!movie) return;
+                
+                DOMElements.detailsModal.content.innerHTML = `
+                    <div class="relative">
+                        <img src="${movie.backdrop}" alt="${movie.title}" class="w-full h-48 md:h-72 object-cover rounded-t-lg">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div>
+                        <button id="close-details-modal" class="absolute top-3 right-3 bg-black/50 rounded-full p-1.5"><i data-lucide="x"></i></button>
+                    </div>
+                    <div class="p-4 md:p-6">
+                        <h2 class="text-3xl font-bold">${movie.title} (${movie.year})</h2>
+                        <div class="flex items-center my-2 space-x-4 text-sm" style="color: var(--text-secondary)">
+                            <div class="flex items-center text-yellow-400">${'★'.repeat(Math.round(movie.rating))}${'☆'.repeat(5 - Math.round(movie.rating))} <span class="ml-2" style="color: var(--text-primary);">${movie.rating}</span></div>
+                            <span>${movie.genres.join(', ')}</span>
+                        </div>
+                        <p class="my-4">${movie.synopsis}</p>
+                        <div class="text-sm space-y-1">
+                            <p><strong style="color: var(--text-primary)">Diretor:</strong> ${movie.director}</p>
+                            <p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                            <button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
+                            <button onclick="alert('Funcionalidade de transmissão em desenvolvimento!')" class="flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);"><i data-lucide="cast" class="mr-2"></i>Transmitir</button>
+                            <button onclick="alert('Funcionalidade de download em desenvolvimento!')" class="flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);"><i data-lucide="download" class="mr-2"></i>Baixar</button>
+                        </div>
+                    </div>`;
+                
+                DOMElements.detailsModal.container.classList.add('active');
+                lucide.createIcons();
+                document.getElementById('close-details-modal').onclick = () => DOMElements.detailsModal.container.classList.remove('active');
+            }
 
-        const toggleInList = (button) => {
-            const icon = button.querySelector('i');
-            const isInList = icon.getAttribute('data-lucide') === 'check';
-            icon.setAttribute('data-lucide', isInList ? 'plus' : 'check');
-            lucide.createIcons();
-        };
-        
-        const scrollCarousel = (carouselId, direction) => {
-            const carousel = document.getElementById(carouselId);
-            if (!carousel) return;
-            const scrollAmount = carousel.offsetWidth * 0.75;
-            carousel.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-        }
+            function openPlayerModal(movieId) {
+                const movie = db.movies.find(m => m.id == movieId);
+                if (!movie) return;
+                
+                const playerContainer = DOMElements.playerModal.playerContainer;
+                playerContainer.innerHTML = (movie.playerType === 'iframe')
+                    ? `<iframe class="w-full h-full" src="${movie.url}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+                    : `<video class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
+                
+                DOMElements.playerModal.container.classList.add('active');
+            }
 
-        // --- Event Listeners ---
-        window.addEventListener('load', () => DOMElements.loadingSpinner.classList.add('hidden'));
+            function closePlayerModal() {
+                DOMElements.playerModal.playerContainer.innerHTML = '';
+                DOMElements.playerModal.container.classList.remove('active');
+            }
 
-        // Header
-        DOMElements.header.genresBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(DOMElements.header.genresMenu, e.currentTarget.parentElement); });
-        DOMElements.header.notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(DOMElements.header.notificationsPanel, e.currentTarget.parentElement); });
-        DOMElements.header.profileBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(DOMElements.header.profileMenu, e.currentTarget.parentElement); });
-        DOMElements.header.themeToggle.addEventListener('click', toggleTheme);
-        
-        // Mobile Nav
-        DOMElements.mobile.hamburgerBtn.addEventListener('click', () => DOMElements.mobile.navPanel.classList.remove('-translate-x-full'));
-        DOMElements.mobile.closeNavBtn.addEventListener('click', () => DOMElements.mobile.navPanel.classList.add('-translate-x-full'));
-        
-        // Mobile Overlays
-        DOMElements.mobile.bottomSearchBtn.addEventListener('click', () => DOMElements.mobile.searchOverlay.classList.add('active'));
-        DOMElements.mobile.closeSearchBtn.addEventListener('click', () => DOMElements.mobile.searchOverlay.classList.remove('active'));
-        DOMElements.mobile.bottomProfileBtn.addEventListener('click', () => DOMElements.mobile.profileOverlay.classList.add('active'));
-        DOMElements.mobile.closeProfileBtn.addEventListener('click', () => DOMElements.mobile.profileOverlay.classList.remove('active'));
-        DOMElements.mobile.themeToggle.addEventListener('click', toggleTheme);
+            function toggleTheme() {
+                DOMElements.html.classList.toggle('light');
+                DOMElements.html.classList.toggle('dark');
+                localStorage.setItem('theme', DOMElements.html.classList.contains('dark') ? 'dark' : 'light');
+                updateThemeIcons();
+            }
+            
+            function updateThemeIcons() {
+                const isLight = DOMElements.html.classList.contains('light');
+                const newIconName = isLight ? 'moon' : 'sun';
+                const btn = DOMElements.themeToggle;
+                if (btn) {
+                    const icon = btn.querySelector('i, svg');
+                    if (icon) {
+                         const newIconEl = document.createElement('i');
+                         newIconEl.setAttribute('data-lucide', newIconName);
+                         for (const attr of icon.attributes) if (attr.name !== 'data-lucide') newIconEl.setAttribute(attr.name, attr.value);
+                         icon.parentNode.replaceChild(newIconEl, icon);
+                    }
+                }
+                lucide.createIcons();
+            }
 
-        // Trailer Modal
-        DOMElements.allTrailerBtns.forEach(btn => btn.addEventListener('click', openTrailerModal));
-        DOMElements.trailerModal.closeBtn.addEventListener('click', closeTrailerModal);
-        DOMElements.trailerModal.container.addEventListener('click', (e) => { if (e.target === DOMElements.trailerModal.container) closeTrailerModal(); });
+            function setupEventListeners() {
+                DOMElements.profileBtn.onclick = (e) => { e.stopPropagation(); DOMElements.profileMenu.classList.toggle('hidden'); };
+                DOMElements.themeToggle.onclick = toggleTheme;
+                DOMElements.hamburgerBtn.onclick = () => DOMElements.mobileNav.classList.remove('-translate-x-full');
+                DOMElements.closeMobileNav.onclick = () => DOMElements.mobileNav.classList.add('-translate-x-full');
+                
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.details-btn')) {
+                        showDetailsModal(e.target.closest('.details-btn').dataset.movieId);
+                    }
+                    if (e.target.closest('.watch-btn')) {
+                        openPlayerModal(e.target.closest('.watch-btn').dataset.movieId);
+                    }
+                    if (!DOMElements.profileDropdownContainer.contains(e.target)) {
+                        DOMElements.profileMenu.classList.add('hidden');
+                    }
+                });
 
-        // Outros
-        DOMElements.allAddToListBtns.forEach(btn => btn.addEventListener('click', () => toggleInList(btn)));
-        DOMElements.backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        window.addEventListener('scroll', () => DOMElements.backToTopBtn.classList.toggle('hidden', window.scrollY < 300));
-        
-        // Exemplo de como a função scrollCarousel deve ser chamada (o onclick no HTML já faz isso)
-        window.scrollCarousel = scrollCarousel;
+                DOMElements.playerModal.closeBtn.onclick = closePlayerModal;
+                DOMElements.playerModal.container.onclick = (e) => { if (e.target === DOMElements.playerModal.container) closePlayerModal(); };
+            }
+            
+            function init() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'light') DOMElements.html.classList.replace('dark', 'light');
+                updateThemeIcons();
+                renderHero();
+                renderAllCarousels();
+                setupEventListeners();
+                lucide.createIcons();
+                DOMElements.loadingSpinner.classList.add('hidden');
+            }
+
+            init();
+        });
     </script>
 </body>
 </html>
