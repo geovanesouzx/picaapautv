@@ -66,10 +66,11 @@
                     <a href="#" id="home-link" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
                 </div>
                 <div class="hidden lg:flex items-center space-x-4">
-                     <button id="desktop-search-button" class="p-2 rounded-md hoverable-item"><i data-lucide="search"></i></button>
-                     <button id="desktop-movies-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Filmes</button>
-                     <button id="desktop-series-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Séries</button>
-                     <button id="desktop-list-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Minha Lista</button>
+                      <button id="desktop-search-button" class="p-2 rounded-md hoverable-item"><i data-lucide="search"></i></button>
+                      <button id="desktop-movies-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Filmes</button>
+                      <button id="desktop-series-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Séries</button>
+                      <button id="desktop-genres-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Gêneros</button>
+                      <button id="desktop-list-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Minha Lista</button>
                     <div class="relative" id="profile-dropdown-container">
                         <button id="profile-button" class="w-9 h-9 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full overflow-hidden" title="Perfil"><img src="https://placehold.co/40x40/ffffff/333333?text=A" alt="Avatar do Utilizador" class="w-full h-full object-cover"></button>
                         <div id="profile-menu" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="background-color: var(--card-bg)">
@@ -95,6 +96,7 @@
                 <a href="#" data-nav="home" class="p-2 rounded-md hoverable-item">Início</a>
                 <a href="#" data-nav="movies" class="p-2 rounded-md hoverable-item">Filmes</a>
                 <a href="#" data-nav="series" class="p-2 rounded-md hoverable-item">Séries</a>
+                <a href="#" data-nav="genres" class="p-2 rounded-md hoverable-item">Gêneros</a>
             </nav>
         </div>
     </div>
@@ -157,71 +159,31 @@
             // --- BANCO DE DADOS E ESTADO DA APLICAÇÃO ---
             const db = {
                 movies: [
-                    { id: 5, title: "Orion e o Escuro", year: "2024", rating: 4.6, genres: ["Animação", "Aventura", "Fantasia"], director: "Sean Charmatz", cast: ["Jacob Tremblay", "Paul Walter Hauser"], synopsis: "Um garoto com uma imaginação ativa enfrenta seus medos numa jornada pela noite...", poster: "https://upload.wikimedia.org/wikipedia/pt/f/f1/Orion_e_o_Escuro.jpg", backdrop: "https://occ-0-8407-92.1.nflxso.net/dnm/api/v6/E8vDc_W8CLv7-yMQu8KMEC7Rrr8/AAAABXj5BLHAmSR-leac11zR8tVvyNTQSxhPr1j_kgD6kvXVCxwbeUZapd-BZywoz4WtVmP7heJQTd0AkuWLCtClHRPP3UBM1DgLaNnu.jpg?r=25c", playerType: 'video', url: "https://1a-1791.com/video/fww1/ae/s8/2/4/B/G/w/4BGwy.gaa.mp4", progress: 0 },
-                    { id: 13, title: "Ratatouille", year: "2007", rating: 4.8, genres: ["Animação", "Comédia", "Família"], director: "Brad Bird", cast: ["Patton Oswalt", "Ian Holm", "Lou Romano"], synopsis: "Um rato chamado Remy sonha em se tornar um grande chef francês, apesar dos desejos de sua família e do óbvio problema de ser um rato em uma profissão decididamente fóbica a roedores.", poster: "https://static.wikia.nocookie.net/dublagem/images/1/1d/Ratatouille_%282007%29_P%C3%B4ster.jpg/revision/latest?cb=20230719130039&path-prefix=pt-br", backdrop: "https://image.tmdb.org/t/p/original/uTSZLWiAIDxS6ELlmjHHtfNkTGP.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/fb/s8/2/2/X/V/S/2XVSx.gaa.mp4", progress: 0 },
-                    { id: 14, title: "Moana - Um Mar de Aventuras", year: "2016", rating: 4.7, genres: ["Animação", "Aventura", "Família"], director: "Ron Clements, John Musker", cast: ["Auli'i Cravalho", "Dwayne Johnson", "Rachel House"], synopsis: "Moana, uma jovem corajosa, parte em uma missão ousada para salvar seu povo. Durante sua jornada, ela encontra o poderoso semideus Maui, que a guia em sua busca para se tornar uma mestre navegadora.", poster: "https://br.web.img3.acsta.net/pictures/16/09/12/22/13/415370.jpg", backdrop: "https://image.tmdb.org/t/p/original/kNAANuEyhDu5g4c5p0gcMFLhV0k.jpg", playerType: 'video', url: "https://1a-1791.com/video/s8/2/K/T/8/c/KT8cv.gaa.mp4", progress: 0 },
-                    { id: 15, title: "O Gato das Botas", year: "2011", rating: 4.4, genres: ["Animação", "Aventura", "Comédia"], director: "Chris Miller", cast: ["Antonio Banderas", "Salma Hayek", "Zach Galifianakis"], synopsis: "Muito antes de conhecer Shrek, o notório lutador e amante Gato de Botas torna-se um herói ao embarcar em uma aventura com a durona e esperta Kitty Pata-Mansa e o mestre Humpty Dumpty.", poster: "https://br.web.img3.acsta.net/medias/nmedia/18/89/67/23/20061404.jpg", backdrop: "https://image.tmdb.org/t/p/original/cC5CR0EBTbgw6UUd8EsHfw3e5N5.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/dd/s8/2/J/P/q/m/JPqmx.gaa.mp4", progress: 0 },
-                    { id: 16, title: "Gato de Botas 2: O Último Pedido", year: "2022", rating: 4.9, genres: ["Animação", "Aventura", "Comédia"], director: "Joel Crawford", cast: ["Antonio Banderas", "Salma Hayek", "Harvey Guillén"], synopsis: "O Gato de Botas descobre que sua paixão pela aventura cobrou seu preço: ele queimou oito de suas nove vidas. Gato parte em uma jornada épica para encontrar o mítico Último Desejo e restaurar suas nove vidas.", poster: "https://m.media-amazon.com/images/S/pv-target-images/af89ec33729d1d14d78507f10f3aa4e3be74093c22a149a90268a39435bc6a82.jpg", backdrop: "https://image.tmdb.org/t/p/original/u8XDx5S8RWc2UgCGc7HHwFWVE2a.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8c/s8/2/u/I/-/a/uI-ax.gaa.mp4", progress: 0 },
-                    { id: 17, title: "Como Treinar o Seu Dragão", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Fantasia"], director: "Dean DeBlois, Chris Sanders", cast: ["Jay Baruchel", "Gerard Butler", "Craig Ferguson"], synopsis: "Um jovem Viking desafortunado que aspira a caçar dragões torna-se o amigo improvável de um jovem dragão e aprende que pode haver mais nas criaturas do que ele imaginava.", poster: "https://upload.wikimedia.org/wikipedia/pt/e/ed/How_to_Train_Your_Dragon_%28filme_de_2010%29.jpg", backdrop: "https://image.tmdb.org/t/p/original/sUxsHQtSxfwmXkoqNlB7Uyl0kaN.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/b3/s8/2/b/4/9/-/b49-w.gaa.mp4", progress: 0 },
-                    { id: 18, title: "Como Treinar o Seu Dragão 2", year: "2014", rating: 4.8, genres: ["Animação", "Aventura", "Fantasia"], director: "Dean DeBlois", cast: ["Jay Baruchel", "Cate Blanchett", "Gerard Butler"], synopsis: "Quando Soluço e Banguela descobrem uma caverna de gelo que é o lar de centenas de novos dragões selvagens e do misterioso Cavaleiro do Dragão, os dois amigos se encontram no centro de uma batalha para proteger a paz.", poster: "https://br.web.img2.acsta.net/pictures/14/05/27/21/27/291561.jpg", backdrop: "https://image.tmdb.org/t/p/original/3y407ibkG1VZvcN6cZlvQexvuxp.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/47/s8/2/K/A/B/6/KAB6w.gaa.mp4", progress: 0 },
-                    { id: 19, title: "Como Treinar o Seu Dragão 3", year: "2019", rating: 4.7, genres: ["Animação", "Aventura", "Fantasia"], director: "Dean DeBlois", cast: ["Jay Baruchel", "America Ferrera", "F. Murray Abraham"], synopsis: "Quando Soluço realiza seu sonho de criar uma utopia pacífica de dragões, a descoberta de Banguela de uma companheira indomável e esquiva atrai o Fúria da Noite para longe. Quando o perigo ameaça a aldeia, o reinado de Soluço como chefe é testado.", poster: "https://br.web.img2.acsta.net/c_310_420/pictures/18/11/13/12/10/5661398.jpg", backdrop: "https://image.tmdb.org/t/p/original/g8a2FT8DWi1e6Fpw7zqrcKWbe8n.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/ce/s8/2/w/2/_/-/w2_-w.gaa.mp4", progress: 0 },
-                    { id: 12, title: "Como Treinar o Seu Dragão", year: "2025", rating: 4.5, genres: ["Ação", "Aventura", "Fantasia"], director: "Dean DeBlois", cast: ["Mason Thames", "Nico Parker", "Gerard Butler"], synopsis: "Uma nova adaptação em live-action da amada história de um jovem Viking e seu temível dragão Fúria da Noite.", poster: "https://ingresso-a.akamaihd.net/prd/img/movie/como-treinar-o-seu-dragao/89a43f9e-2a94-4271-a698-d6ddfb7c7908.webp", backdrop: "https://image.tmdb.org/t/p/original/lX4GUbN2J8WqUh6nJ4r0bGOm0hm.jpg", playerType: 'video', url: "https://f005.backblazeb2.com/file/s7rave/Como%20treinar%20o%20seu%20dragao%20dublado.mp4", progress: 0 },
-                    { id: 3, title: "O Segredo dos Animais", year: "2006", rating: 4.1, genres: ["Comédia", "Animação"], director: "Steve Oedekerk", cast: ["Kevin James", "Courteney Cox"], synopsis: "Quando o fazendeiro está fora, todos os animais da fazenda cantam e dançam...", poster: "https://br.web.img3.acsta.net/medias/nmedia/18/94/12/17/20304560.jpg", backdrop: "https://http2.mlstatic.com/D_NQ_NP_751137-MLA73368651374_122023-B.webp", playerType: 'video', url: "https://1a-1791.com/video/fww1/ab/s8/2/o/e/2/s/oe2sy.gaa.mp4", progress: 50 },
-                    { id: 4, title: "A Nova Onda do Imperador", year: "2000", rating: 4.7, genres: ["Comédia", "Animação", "Aventura"], director: "Mark Dindal", cast: ["David Spade", "John Goodman"], synopsis: "O arrogante imperador Kuzco é transformado em uma lhama...", poster: "https://m.media-amazon.com/images/M/MV5BMjBkMWE4ZjUtZTgxYi00MjRlLWIyYWYtY2M2ZWQ2YzA3OTgyXkEyXkFqcGc@._V1_.jpg", backdrop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFDmG7HE_dd27sbKKLDzeZGzu95qaL2WUrTXspfaBNANTSJkTFvxbMcqqmto_MTH05C6XSW85CXpNIiyE8MQEzmG06xefmAiuale1SZaP5IMh17pRBS08vIdRDvxsz06ri6T2KToVw9Uk/s1000/a+nova+onda+do+imperador.png", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8b/s8/2/k/P/h/x/kPhxy.caa.mp4", progress: 0 },
-                    { id: 2, title: "Pica-Pau: O Filme", year: "2017", rating: 3.8, genres: ["Comédia", "Animação", "Aventura"], director: "Alex Zamm", cast: ["Timothy Omundson", "Thaila Ayala"], synopsis: "O Pica-Pau está metido em mais uma de suas brigas por território...", poster: "https://br.web.img2.acsta.net/pictures/17/08/25/19/04/419991.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg", playerType: 'iframe', url: "https://www.tokyvideo.com/embed/409976", progress: 0 },
-                    { id: 6, title: "Patos!", year: "2023", rating: 4.4, genres: ["Animação", "Aventura", "Comédia"], director: "Benjamin Renner", cast: ["Kumail Nanjiani", "Elizabeth Banks"], synopsis: "Uma família de patos tenta convencer seu pai a embarcar nas férias de suas vidas...", poster: "https://br.web.img2.acsta.net/pictures/23/12/07/19/08/2800297.jpg", backdrop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiHQEZwHPftCEbCl9A7Y0FDNCCyY63UzTzcw4jC9qsR78PsH_J5xely5IjIV9kr4KgBPMWRvdJXGL2pYnHIIKjDvDQnivL4esBc60uecHi4oZuP-SVyLw26sQ1ZaWF6zmZp89uSbjcGfTFD6-HLY6V1d-bBExjwMeZefxg-MH_6CdyNBYvawMcGUrQ9WMt/s1640/Patos%20cover.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/26/s8/2/G/0/G/w/G0Gwy.gaa.mp4", progress: 20 },
-                    { id: 7, title: "WiFi Ralph", year: "2018", rating: 4.3, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Ralph e Vanellope descobrem um roteador wi-fi em seu fliperama...", poster: "https://br.web.img3.acsta.net/pictures/18/10/29/20/33/4244487.jpg", backdrop: "https://files.meiobit.com/wp-content/uploads/2018/11/20181130ralph-001.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/45/s8/2/6/1/J/w/61Jwy.gaa.mp4", progress: 0 },
-                    { id: 8, title: "Detona Ralph", year: "2012", rating: 4.5, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Um vilão de videogame quer provar que pode ser um herói...", poster: "https://musicart.xboxlive.com/7/82621100-0000-0000-0000-000000000002/504/image.jpg", backdrop: "https://m.media-amazon.com/images/S/pv-target-images/9db2a8d2cd5e2a588220a032ed4a5daae0b93c04ea8fda8716701e69200ee421._SX1080_FMjpg_.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/b0/s8/2/0/1/J/w/01Jwy.gaa.mp4", progress: 0 },
-                    { id: 9, title: "Enrolados", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Romance"], director: "Nathan Greno", cast: ["Mandy Moore", "Zachary Levi"], synopsis: "Rapunzel, com seu cabelo mágico, faz um acordo com o ladrão Flynn Rider...", poster: "https://a-static.mlcdn.com.br/800x560/dvd-enrolados-lacrado-disney/videoimpacto/8320145385/7657b9fed71739c7563e6b346015c61d.jpg", backdrop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEFR_J4w6veFIbYfEzl7Vgg_I4um9o0JUfNTWE8IiL1LrN_TNH6fD0MaTvg9yNV8fCZZAVhX9kLl_Cnphw8scYd5apRm62FhEg6x-jjwJX5peGv6mVJq8lGma_XzqAzrYkYVSgV81HTOk/s1000/enrolados.png", playerType: 'video', url: "https://1a-1791.com/video/fww1/5f/s8/2/g/J/K/t/gJKty.gaa.mp4", progress: 80 },
-                    { id: 10, title: "Elementos", year: "2023", rating: 4.6, genres: ["Animação", "Comédia", "Fantasia", "Romance"], director: "Peter Sohn", cast: ["Leah Lewis", "Mamoudou Athie"], synopsis: "Numa cidade onde vivem residentes de fogo, água, terra e ar...", poster: "https://lumiere-a.akamaihd.net/v1/images/elemental_bport_765442cf.png", backdrop: "https://lumiere-a.akamaihd.net/v1/images/lineup_my-element_03_5368a525.jpeg?region=0,1,1200,675&width=960", playerType: 'video', url: "https://1a-1791.com/video/fww1/eb/s8/2/c/y/v/u/cyvuy.gaa.mp4", progress: 0 },
-                    { id: 11, title: "Moana 2", year: "2024", rating: 4.9, genres: ["Animação", "Aventura", "Fantasia"], director: "David G. Derrick Jr.", cast: ["Auli'i Cravalho", "Dwayne Johnson"], synopsis: "Moana embarca numa nova jornada com Maui...", poster: "https://upload.wikimedia.org/wikipedia/pt/thumb/7/73/Moana_2_poster.jpg/250px-Moana_2_poster.jpg", backdrop: "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/ac70c442-571e-48ae-8733-7494bd7d27c6/compose?aspectRatio=1.78&format=webp&width=1200", playerType: 'video', url: "https://1a-1791.com/video/fwe2/04/s8/2/s/x/t/s/sxtsy.gaa.mp4", progress: 0 }
+                    { id: 5, title: "Orion e o Escuro", year: "2024", rating: 4.6, genres: ["Animação", "Aventura", "Fantasia"], director: "Sean Charmatz", cast: ["Jacob Tremblay", "Paul Walter Hauser"], synopsis: "Um garoto com uma imaginação ativa enfrenta seus medos numa jornada pela noite...", poster: "https://upload.wikimedia.org/wikipedia/pt/f/f1/Orion_e_o_Escuro.jpg", backdrop: "https://occ-0-8407-92.1.nflxso.net/dnm/api/v6/E8vDc_W8CLv7-yMQu8KMEC7Rrr8/AAAABXj5BLHAmSR-leac11zR8tVvyNTQSxhPr1j_kgD6kvXVCxwbeUZapd-BZywoz4WtVmP7heJQTd0AkuWLCtClHRPP3UBM1DgLaNnu.jpg?r=25c", playerType: 'video', url: "https://1a-1791.com/video/fww1/ae/s8/2/4/B/G/w/4BGwy.gaa.mp4", progress: 0, dateAdded: '2025-07-18' },
+                    { id: 13, title: "Ratatouille", year: "2007", rating: 4.8, genres: ["Animação", "Comédia", "Família"], director: "Brad Bird", cast: ["Patton Oswalt", "Ian Holm", "Lou Romano"], synopsis: "Um rato chamado Remy sonha em se tornar um grande chef francês...", poster: "https://upload.wikimedia.org/wikipedia/pt/8/82/Ratatouille_p%C3%B4ster.jpg", backdrop: "https://image.tmdb.org/t/p/original/uTSZLWiAIDxS6ELlmjHHtfNkTGP.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/fb/s8/2/2/X/V/S/2XVSx.gaa.mp4", progress: 0, dateAdded: '2025-07-17' },
+                    { id: 14, title: "Moana - Um Mar de Aventuras", year: "2016", rating: 4.7, genres: ["Animação", "Aventura", "Família"], director: "Ron Clements, John Musker", cast: ["Auli'i Cravalho", "Dwayne Johnson", "Rachel House"], synopsis: "Moana, uma jovem corajosa, parte em uma missão ousada para salvar seu povo.", poster: "https://br.web.img3.acsta.net/pictures/16/09/12/22/13/415370.jpg", backdrop: "https://image.tmdb.org/t/p/original/kNAANuEyhDu5g4c5p0gcMFLhV0k.jpg", playerType: 'video', url: "https://1a-1791.com/video/s8/2/K/T/8/c/KT8cv.gaa.mp4", progress: 0, dateAdded: '2025-07-16' },
+                    { id: 16, title: "Gato de Botas 2: O Último Pedido", year: "2022", rating: 4.9, genres: ["Animação", "Aventura", "Comédia"], director: "Joel Crawford", cast: ["Antonio Banderas", "Salma Hayek", "Harvey Guillén"], synopsis: "O Gato de Botas descobre que sua paixão pela aventura cobrou seu preço: ele queimou oito de suas nove vidas.", poster: "https://m.media-amazon.com/images/S/pv-target-images/af89ec33729d1d14d78507f10f3aa4e3be74093c22a149a90268a39435bc6a82.jpg", backdrop: "https://image.tmdb.org/t/p/original/u8XDx5S8RWc2UgCGc7HHwFWVE2a.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8c/s8/2/u/I/-/a/uI-ax.gaa.mp4", progress: 0, dateAdded: '2025-07-15' },
+                    { id: 17, title: "Como Treinar o Seu Dragão", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Fantasia"], director: "Dean DeBlois, Chris Sanders", cast: ["Jay Baruchel", "Gerard Butler", "Craig Ferguson"], synopsis: "Um jovem Viking desafortunado que aspira a caçar dragões torna-se o amigo improvável de um jovem dragão...", poster: "https://upload.wikimedia.org/wikipedia/pt/e/ed/How_to_Train_Your_Dragon_%28filme_de_2010%29.jpg", backdrop: "https://image.tmdb.org/t/p/original/sUxsHQtSxfwmXkoqNlB7Uyl0kaN.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/b3/s8/2/b/4/9/-/b49-w.gaa.mp4", progress: 0, dateAdded: '2025-07-14' },
+                    { id: 3, title: "O Segredo dos Animais", year: "2006", rating: 4.1, genres: ["Comédia", "Animação"], director: "Steve Oedekerk", cast: ["Kevin James", "Courteney Cox"], synopsis: "Quando o fazendeiro está fora, todos os animais da fazenda cantam e dançam...", poster: "https://br.web.img3.acsta.net/medias/nmedia/18/94/12/17/20304560.jpg", backdrop: "https://http2.mlstatic.com/D_NQ_NP_751137-MLA73368651374_122023-B.webp", playerType: 'video', url: "https://1a-1791.com/video/fww1/ab/s8/2/o/e/2/s/oe2sy.gaa.mp4", progress: 50, dateAdded: '2025-07-13' },
+                    { id: 4, title: "A Nova Onda do Imperador", year: "2000", rating: 4.7, genres: ["Comédia", "Animação", "Aventura"], director: "Mark Dindal", cast: ["David Spade", "John Goodman"], synopsis: "O arrogante imperador Kuzco é transformado em uma lhama...", poster: "https://m.media-amazon.com/images/M/MV5BMjBkMWE4ZjUtZTgxYi00MjRlLWIyYWYtY2M2ZWQ2YzA3OTgyXkEyXkFqcGc@._V1_.jpg", backdrop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFDmG7HE_dd27sbKKLDzeZGzu95qaL2WUrTXspfaBNANTSJkTFvxbMcqqmto_MTH05C6XSW85CXpNIiyE8MQEzmG06xefmAiuale1SZaP5IMh17pRBS08vIdRDvxsz06ri6T2KToVw9Uk/s1000/a+nova+onda+do+imperador.png", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8b/s8/2/k/P/h/x/kPhxy.caa.mp4", progress: 0, dateAdded: '2025-07-12' },
+                    { id: 2, title: "Pica-Pau: O Filme", year: "2017", rating: 3.8, genres: ["Comédia", "Animação", "Aventura"], director: "Alex Zamm", cast: ["Timothy Omundson", "Thaila Ayala"], synopsis: "O Pica-Pau está metido em mais uma de suas brigas por território...", poster: "https://br.web.img2.acsta.net/pictures/17/08/25/19/04/419991.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg", playerType: 'iframe', url: "https://www.tokyvideo.com/embed/409976", progress: 0, dateAdded: '2025-07-11' },
+                    { id: 6, title: "Patos!", year: "2023", rating: 4.4, genres: ["Animação", "Aventura", "Comédia"], director: "Benjamin Renner", cast: ["Kumail Nanjiani", "Elizabeth Banks"], synopsis: "Uma família de patos tenta convencer seu pai a embarcar nas férias de suas vidas...", poster: "https://br.web.img2.acsta.net/pictures/23/12/07/19/08/2800297.jpg", backdrop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiHQEZwHPftCEbCl9A7Y0FDNCCyY63UzTzcw4jC9qsR78PsH_J5xely5IjIV9kr4KgBPMWRvdJXGL2pYnHIIKjDvDQnivL4esBc60uecHi4oZuP-SVyLw26sQ1ZaWF6zmZp89uSbjcGfTFD6-HLY6V1d-bBExjwMeZefxg-MH_6CdyNBYvawMcGUrQ9WMt/s1640/Patos%20cover.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/26/s8/2/G/0/G/w/G0Gwy.gaa.mp4", progress: 20, dateAdded: '2025-07-10' },
+                    { id: 9, title: "Enrolados", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Romance"], director: "Nathan Greno", cast: ["Mandy Moore", "Zachary Levi"], synopsis: "Rapunzel, com seu cabelo mágico, faz um acordo com o ladrão Flynn Rider...", poster: "https://upload.wikimedia.org/wikipedia/pt/9/99/Tangled_Disney.jpg", backdrop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEFR_J4w6veFIbYfEzl7Vgg_I4um9o0JUfNTWE8IiL1LrN_TNH6fD0MaTvg9yNV8fCZZAVhX9kLl_Cnphw8scYd5apRm62FhEg6x-jjwJX5peGv6mVJq8lGma_XzqAzrYkYVSgV81HTOk/s1000/enrolados.png", playerType: 'video', url: "https://1a-1791.com/video/fww1/5f/s8/2/g/J/K/t/gJKty.gaa.mp4", progress: 80, dateAdded: '2025-07-09' }
                 ],
                 series: [
                     {
-                        id: "pica-pau",
-                        title: "Pica-Pau",
-                        cover: "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/aXgyvCWLPkbZUCYR822KLsKZXgt.jpg",
-                        backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg",
+                        id: "pica-pau", title: "Pica-Pau", cover: "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/aXgyvCWLPkbZUCYR822KLsKZXgt.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg",
                         synopsis: "As aventuras clássicas e hilárias do Pica-Pau, um pássaro icônico conhecido por sua risada contagiante e suas travessuras intermináveis contra seus adversários.",
+                        genres: ["Animação", "Comédia", "Família"], dateAdded: '2025-07-01',
                         seasons: [
-                            {
-                                id: "season-1940",
-                                title: "Temporada 1 (1940)",
-                                episodes: [
-                                    { videoUrl: "https://files.catbox.moe/mj23l1.mp4", title: "Pica-Pau Ataca Novamente" },
-                                    { videoUrl: "https://files.catbox.moe/1onuvg.mp4", title: "O Pica-Pau Biruta" },
-                                    { videoUrl: "https://files.catbox.moe/fm8er6.mp4", title: "O Biruta" },
-                                    { videoUrl: "https://files.catbox.moe/3vlf67.mp4", title: "Pânico na Cozinha" },
-                                    { videoUrl: "https://files.catbox.moe/opgp7j.mp4", title: "O Matador de Hollywood" },
-                                    { videoUrl: "https://files.catbox.moe/13r6tn.mp4", title: "Um Ás de Mais" },
-                                    { videoUrl: "https://files.catbox.moe/2tsdpm.mp4", title: "A Loja do Prego" },
-                                    { videoUrl: "https://files.catbox.moe/eg8s85.mp4", title: "Beisebol Maluco" },
-                                    { videoUrl: "https://files.catbox.moe/3lths3.mp4", title: "O Acrobata Maluco" },
-                                    { videoUrl: "https://files.catbox.moe/35fv2h.mp4", title: "O Afanador de Gasolina" }
-                                ]
-                            },
-                            {
-                                id: "season-1944",
-                                title: "Temporada 2 (1944)",
-                                episodes: [
-                                    { videoUrl: "https://files.catbox.moe/04glch.mp4", title: "O Barbeiro de Sevilha" },
-                                    { videoUrl: "https://files.catbox.moe/0w74ed.mp4", title: "O Doido da Praia" },
-                                    { videoUrl: "https://files.catbox.moe/rxt33w.mp4", title: "Ski Para Dois" },
-                                    { videoUrl: "https://files.catbox.moe/2jn2cq.mp4", title: "Uma Dama Muito Fina" },
-                                    { videoUrl: "https://files.catbox.moe/ainphs.mp4", title: "O Pica-Pau Come Fora" },
-                                    { videoUrl: "https://files.catbox.moe/tj1f0o.mp4", title: "O Famoso Diplomata" },
-                                    { videoUrl: "https://files.catbox.moe/z9vbpa.mp4", title: "O Biruta à Solta" },
-                                    { videoUrl: "https://files.catbox.moe/ha4ilo.mp4", title: "Quem Cozinha Quem" },
-                                    { videoUrl: "https://files.catbox.moe/b79gdf.mp4", title: "A Hora do Banho" },
-                                    { videoUrl: "https://files.catbox.moe/6czmzf.mp4", title: "Motorista Desleixado" }
-                                ]
-                            }
+                            { id: "season-1940", title: "Temporada 1 (1940)", episodes: [ { videoUrl: "https://files.catbox.moe/mj23l1.mp4", title: "Pica-Pau Ataca Novamente" }, { videoUrl: "https://files.catbox.moe/1onuvg.mp4", title: "O Pica-Pau Biruta" } ] },
+                            { id: "season-1944", title: "Temporada 2 (1944)", episodes: [ { videoUrl: "https://files.catbox.moe/04glch.mp4", title: "O Barbeiro de Sevilha" }, { videoUrl: "https://files.catbox.moe/0w74ed.mp4", title: "O Doido da Praia" } ] }
                         ]
                     }
                 ],
                 carousels: [
+                    { title: "Adicionados Recentemente", filter: (item) => true, sort: (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded) },
                     { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
-                    { title: "Saga Como Treinar o Seu Dragão", filter: (m) => m.title.includes("Como Treinar o Seu Dragão") },
                     { title: "Continuar a Assistir", filter: (m) => m.progress > 0 && m.progress < 100 },
                     { title: "Animações Imperdíveis", filter: (m) => m.genres.includes("Animação") },
                     { title: "Comédias para Rir à Vontade", filter: (m) => m.genres.includes("Comédia") },
@@ -231,7 +193,7 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -263,20 +225,34 @@
             function renderAllCarousels() {
                 DOMElements.contentContainer.innerHTML = '<div class="space-y-12 md:space-y-16"></div>';
                 const carouselWrapper = DOMElements.contentContainer.firstChild;
+                const allContent = [...db.movies, ...db.series];
+
                 db.carousels.forEach(carouselConfig => {
-                    const movies = db.movies.filter(carouselConfig.filter);
-                    if (movies.length > 0) {
-                        carouselWrapper.innerHTML += createCarouselHTML(carouselConfig.title, movies);
+                    let items = allContent.filter(carouselConfig.filter);
+                    if (carouselConfig.sort) {
+                        items = items.sort(carouselConfig.sort);
+                    }
+                    if (items.length > 0) {
+                        carouselWrapper.innerHTML += createCarouselHTML(carouselConfig.title, items);
                     }
                 });
             }
 
-            function createCarouselHTML(title, movies) {
+            function createCarouselHTML(title, items) {
                 return `
                     <section class="container mx-auto px-4 sm:px-6 lg:px-8">
                         <h2 class="text-2xl md:text-3xl font-bold mb-4">${title}</h2>
-                        <div class="relative"><div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4">${movies.map(createCarouselMovieCardHTML).join('')}</div></div>
+                        <div class="relative"><div class="carousel-container flex overflow-x-auto space-x-4 py-4 -mx-4 px-4">${items.map(createItemCardHTML).join('')}</div></div>
                     </section>`;
+            }
+
+            function createItemCardHTML(item) {
+                const isMovie = !!item.director; // Checa se é filme pela propriedade director
+                if (isMovie) {
+                    return createCarouselMovieCardHTML(item);
+                } else {
+                    return createSeriesCardHTML(item);
+                }
             }
 
             function createCarouselMovieCardHTML(movie) {
@@ -342,8 +318,8 @@
                             <p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p>
                         </div>
                         <div class="flex flex-wrap gap-3 mt-6">
-                            <button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
-                            <button class="add-to-list-btn flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button>
+                            <button class="watch-btn flex-grow flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
+                            <button class="add-to-list-btn flex-grow flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button>
                             <a href="${castUrl}" class="p-3 flex items-center justify-center border rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" title="Transmitir"><i data-lucide="cast"></i></a>
                             <a href="${movie.url}" download="${movie.title}" class="p-3 flex items-center justify-center border rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" title="Baixar"><i data-lucide="download"></i></a>
                         </div>
@@ -366,7 +342,7 @@
                 document.getElementById('close-details-modal').onclick = () => DOMElements.detailsModal.container.classList.remove('active');
                 setupRatingAndComments(`movie-${movie.id}`);
             }
-
+            
             function openPlayerModal(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
@@ -390,7 +366,7 @@
             
             // --- RENDERIZAÇÃO DE SÉRIES ---
             function createSeriesCardHTML(series) {
-                return `<div class="series-card rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-series-id="${series.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${series.cover}" alt="Capa de ${series.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';"></div></div>`;
+                return `<div class="series-card flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-series-id="${series.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${series.cover}" alt="Capa de ${series.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';"></div></div>`;
             }
 
             function renderSeriesDetailsPage(seriesId) {
@@ -465,6 +441,42 @@
                 lucide.createIcons();
                 setupRatingAndComments(`series-${series.id}`);
             }
+
+            // --- RENDERIZAÇÃO DE GÊNEROS ---
+            function renderGenresPage() {
+                DOMElements.contentContainer.className = 'py-8 md:py-12';
+                DOMElements.heroSection.style.display = 'none';
+                updateActiveNav('');
+
+                const allGenres = [...new Set([...db.movies, ...db.series].flatMap(item => item.genres))].sort();
+                
+                let contentHTML = `<div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-2xl md:text-3xl font-bold mb-8">Gêneros</h2>`;
+                contentHTML += `<div class="flex flex-wrap gap-4">`;
+                allGenres.forEach(genre => {
+                    contentHTML += `<button class="genre-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition" data-genre="${genre}">${genre}</button>`;
+                });
+                contentHTML += `</div><div id="genre-results" class="mt-12"></div></div>`;
+                
+                DOMElements.contentContainer.innerHTML = contentHTML;
+            }
+
+            function renderGenreResults(genre) {
+                const resultsContainer = document.getElementById('genre-results');
+                const filteredItems = [...db.movies, ...db.series].filter(item => item.genres.includes(genre));
+                
+                let contentHTML = `<h3 class="text-xl md:text-2xl font-bold mb-6">Resultados para "${genre}"</h3>`;
+                if (filteredItems.length > 0) {
+                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${filteredItems.map(item => {
+                        return item.director ? createGridMovieCardHTML(item) : createSeriesCardHTML(item);
+                    }).join('')}</div>`;
+                } else {
+                    contentHTML += `<p style="color: var(--text-secondary);">Nenhum item encontrado para este gênero.</p>`;
+                }
+                
+                resultsContainer.innerHTML = contentHTML;
+                lucide.createIcons();
+            }
+
 
             // --- FUNÇÕES DE UTILIDADE E LÓGICA ---
             const saveMyList = () => localStorage.setItem('myList', JSON.stringify(myList));
@@ -625,6 +637,7 @@
                 DOMElements.desktopListBtn.onclick = renderMyListPage;
                 DOMElements.desktopMoviesBtn.onclick = () => renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML);
                 DOMElements.desktopSeriesBtn.onclick = () => renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createSeriesCardHTML);
+                DOMElements.desktopGenresBtn.onclick = renderGenresPage;
 
                 // --- Event Listeners de Busca ---
                 const openSearch = () => DOMElements.searchModal.container.classList.add('active');
@@ -652,6 +665,7 @@
                         case 'home': renderHomePage(); break;
                         case 'movies': renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML); break;
                         case 'series': renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createSeriesCardHTML); break;
+                        case 'genres': renderGenresPage(); break;
                     }
                     DOMElements.mobileNav.classList.remove('active');
                 });
@@ -659,6 +673,7 @@
                 // Listener de cliques global
                 document.addEventListener('click', (e) => {
                     const target = e.target;
+                    
                     const detailsBtn = target.closest('.details-btn');
                     if (detailsBtn) {
                         DOMElements.searchModal.container.classList.remove('active');
@@ -667,7 +682,7 @@
 
                     const watchBtn = target.closest('.watch-btn');
                     if (watchBtn) return openPlayerModal(watchBtn.dataset.movieId);
-                    
+
                     const listBtn = target.closest('.add-to-list-btn');
                     if (listBtn) return toggleMovieInList(listBtn.dataset.movieId);
                     
@@ -679,6 +694,9 @@
 
                     const episodeItem = target.closest('.episode-item');
                     if (episodeItem) return openPlayerModalForEpisode(episodeItem.dataset.videoUrl, episodeItem.dataset.videoTitle);
+
+                    const genreBtn = target.closest('.genre-btn');
+                    if (genreBtn) return renderGenreResults(genreBtn.dataset.genre);
 
                     if (!DOMElements.profileDropdownContainer.contains(target)) {
                         DOMElements.profileMenu.classList.add('hidden');
