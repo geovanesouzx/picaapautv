@@ -258,8 +258,50 @@
                         synopsis: "As aventuras clássicas e hilárias do Pica-Pau, um pássaro icônico conhecido por sua risada contagiante e suas travessuras intermináveis contra seus adversários.",
                         genres: ["Animação", "Comédia", "Família"], dateAdded: '2025-07-01',
                         seasons: [
-                            { id: "season-1940", title: "Temporada 1 (1940)", episodes: [ { videoUrl: "https://files.catbox.moe/mj23l1.mp4", title: "Pica-Pau Ataca Novamente" }, { videoUrl: "https://files.catbox.moe/1onuvg.mp4", title: "O Pica-Pau Biruta" } ] },
-                            { id: "season-1944", title: "Temporada 2 (1944)", episodes: [ { videoUrl: "https://files.catbox.moe/04glch.mp4", title: "O Barbeiro de Sevilha" }, { videoUrl: "https://files.catbox.moe/0w74ed.mp4", title: "O Doido da Praia" } ] }
+                             {
+                                id: "season-1940",
+                                title: "Pica-Pau 1940",
+                                episodes: [
+                                    { videoUrl: "https://files.catbox.moe/mj23l1.mp4", title: "Pica-Pau Ataca Novamente" },
+                                    { videoUrl: "https://files.catbox.moe/1onuvg.mp4", title: "O Pica-Pau Biruta" },
+                                    { videoUrl: "https://files.catbox.moe/fm8er6.mp4", title: "O Biruta" },
+                                    { videoUrl: "https://files.catbox.moe/3vlf67.mp4", title: "Pânico na Cozinha" },
+                                    { videoUrl: "https://files.catbox.moe/opgp7j.mp4", title: "O Matador de Hollywood" },
+                                    { videoUrl: "https://files.catbox.moe/13r6tn.mp4", title: "Um Ás de Mais" },
+                                    { videoUrl: "https://files.catbox.moe/2tsdpm.mp4", title: "A Loja do Prego" },
+                                    { videoUrl: "https://files.catbox.moe/eg8s85.mp4", title: "Beisebol Maluco" },
+                                    { videoUrl: "https://files.catbox.moe/3lths3.mp4", title: "O Acrobata Maluco" },
+                                    { videoUrl: "https://files.catbox.moe/35fv2h.mp4", title: "O Afanador de Gasolina" }
+                                ]
+                            },
+                            {
+                                id: "season-1944",
+                                title: "Pica-Pau 1944",
+                                episodes: [
+                                    { videoUrl: "https://files.catbox.moe/04glch.mp4", title: "O Barbeiro de Sevilha" },
+                                    { videoUrl: "https://files.catbox.moe/0w74ed.mp4", title: "O Doido da Praia" },
+                                    { videoUrl: "https://files.catbox.moe/rxt33w.mp4", title: "Ski Para Dois" },
+                                    { videoUrl: "https://files.catbox.moe/2jn2cq.mp4", title: "Uma Dama Muito Fina" },
+                                    { videoUrl: "https://files.catbox.moe/ainphs.mp4", title: "O Pica-Pau Come Fora" },
+                                    { videoUrl: "https://files.catbox.moe/tj1f0o.mp4", title: "O Famoso Diplomata" },
+                                    { videoUrl: "https://files.catbox.moe/z9vbpa.mp4", title: "O Biruta à Solta" },
+                                    { videoUrl: "https://files.catbox.moe/ha4ilo.mp4", title: "Quem Cozinha Quem" },
+                                    { videoUrl: "https://files.catbox.moe/b79gdf.mp4", title: "A Hora do Banho" },
+                                    { videoUrl: "https://files.catbox.moe/6czmzf.mp4", title: "Motorista Desleixado" },
+                                    { videoUrl: "https://files.catbox.moe/5gw5jy.mp4", title: "Amigos Penosos" },
+                                    { videoUrl: "https://files.catbox.moe/47j4a8.mp4", title: "Trechos Musicais de Chopin" },
+                                    { videoUrl: "https://files.catbox.moe/m5u2wm.mp4", title: "Presuntos Defumados" },
+                                    { videoUrl: "https://files.catbox.moe/tno4cu.mp4", title: "O Passarinho do Relógio" },
+                                    { videoUrl: "https://files.catbox.moe/4poki7.mp4", title: "Roubando Gasolina" },
+                                    { videoUrl: "https://files.catbox.moe/65d55x.mp4", title: "O Ovo da Galinha" },
+                                    { videoUrl: "https://files.catbox.moe/jyjmtq.mp4", title: "Pica-Pau, o Mata Gigante" },
+                                    { videoUrl: "https://files.catbox.moe/77bu5q.mp4", title: "A Cartola" },
+                                    { videoUrl: "https://files.catbox.moe/sfi4xt.mp4", title: "O Fila Bóia" },
+                                    { videoUrl: "https://files.catbox.moe/u2xw9q.mp4", title: "Hora do Bebê" },
+                                    { videoUrl: "https://files.catbox.moe/fgn0jp.mp4", title: "Apólice Cobertor" },
+                                    { videoUrl: "https://files.catbox.moe/2e1dlr.mp4", title: "Pica-Pau Xerife" }
+                                ]
+                            }
                         ]
                     }
                 ],
@@ -317,6 +359,9 @@
                     let items = allContent.filter(carouselConfig.filter);
                     if (carouselConfig.sort) {
                         items = items.sort(carouselConfig.sort);
+                    }
+                    if (carouselConfig.title === "Adicionados Recentemente") {
+                        items = items.slice(0, 8);
                     }
                     if (items.length > 0) {
                         carouselWrapper.innerHTML += createCarouselHTML(carouselConfig.title, items);
