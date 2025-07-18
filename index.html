@@ -20,6 +20,7 @@
             --accent-color: #a855f7; /* purple-500 */
             --hero-text-primary: #ffffff;
             --hero-text-secondary: #e5e7eb;
+            --star-color: #facc15; /* yellow-400 */
         }
         html.light {
             --background: #f3f4f6; --text-primary: #1f2937; --text-secondary: #4b5563;
@@ -38,8 +39,8 @@
         }
         .hero-gradient-bottom { background-image: linear-gradient(to top, var(--background) 10%, rgba(12, 10, 9, 0) 100%); }
         .hero-gradient-left { background-image: linear-gradient(to right, var(--background) 20%, transparent 100%); }
-        .carousel-container { scrollbar-width: none; }
-        .carousel-container::-webkit-scrollbar { display: none; }
+        .carousel-container, .search-results { scrollbar-width: none; }
+        .carousel-container::-webkit-scrollbar, .search-results::-webkit-scrollbar { display: none; }
         .modal { transition: opacity 0.3s, visibility 0.3s; visibility: hidden; opacity: 0; }
         .modal.active { visibility: visible; opacity: 1; }
         #mobile-nav, .mobile-overlay { transition: opacity 0.3s, visibility 0.3s; visibility: hidden; opacity: 0; }
@@ -48,15 +49,11 @@
         .mobile-nav-item { color: var(--text-secondary); }
         .mobile-nav-item.active { color: var(--accent-color); }
         select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
+            background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;
         }
+        .star-rating .lucide-star { cursor: pointer; transition: color 0.2s; }
     </style>
 </head>
 <body class="pb-20 md:pb-0">
@@ -69,6 +66,7 @@
                     <a href="#" id="home-link" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
                 </div>
                 <div class="hidden lg:flex items-center space-x-4">
+                     <button id="desktop-search-button" class="p-2 rounded-md hoverable-item"><i data-lucide="search"></i></button>
                      <button id="desktop-movies-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Filmes</button>
                      <button id="desktop-series-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Séries</button>
                      <button id="desktop-list-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Minha Lista</button>
@@ -139,6 +137,17 @@
     <div id="mobile-profile-overlay" class="modal fixed inset-0 z-50 p-4" style="background-color: var(--overlay-bg);">
         <div class="flex justify-end mb-4"><button id="close-profile-overlay"><i data-lucide="x" class="w-7 h-7"></i></button></div>
         <div class="mt-8 flex flex-col items-center space-y-6"><h2 class="text-2xl font-bold">Perfil</h2><button id="mobile-theme-toggle" class="p-4 rounded-md text-lg flex items-center justify-center hoverable-item w-full max-w-xs">Mudar Tema <i data-lucide="sun" class="w-5 h-5 ml-2"></i></button></div>
+    </div>
+    
+    <!-- Modal de Busca -->
+    <div id="search-modal" class="modal fixed inset-0 z-50 p-4 pt-16" style="background-color: var(--overlay-bg);">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between mb-4">
+                <input type="text" id="search-input" placeholder="Buscar por filmes ou séries..." class="w-full p-3 rounded-md border-none text-lg" style="background-color: var(--card-bg); color: var(--text-primary);">
+                <button id="close-search-modal" class="ml-2 p-2"><i data-lucide="x" class="w-8 h-8"></i></button>
+            </div>
+            <div id="search-results" class="max-h-[80vh] overflow-y-auto"></div>
+        </div>
     </div>
 
     <div id="loading-spinner" class="fixed inset-0 flex justify-center items-center z-[60]" style="background-color: var(--background);"><div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div></div>
@@ -222,7 +231,7 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button')
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -312,11 +321,50 @@
             function showDetailsModal(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
-                DOMElements.detailsModal.content.innerHTML = `<div class="relative"><img src="${movie.backdrop}" alt="${movie.title}" class="w-full h-48 md:h-72 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/e5e7eb?text=Imagem+Indisponível';"><div class="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div><button id="close-details-modal" class="absolute top-3 right-3 bg-black/50 rounded-full p-1.5"><i data-lucide="x"></i></button></div><div class="p-4 md:p-6"><h2 class="text-3xl font-bold">${movie.title} (${movie.year})</h2><div class="flex items-center my-2 space-x-4 text-sm" style="color: var(--text-secondary)"><div class="flex items-center text-yellow-400">${'★'.repeat(Math.round(movie.rating))}${'☆'.repeat(5 - Math.round(movie.rating))} <span class="ml-2" style="color: var(--text-primary);">${movie.rating}</span></div><span>${movie.genres.join(', ')}</span></div><p class="my-4">${movie.synopsis}</p><div class="text-sm space-y-1"><p><strong style="color: var(--text-primary)">Diretor:</strong> ${movie.director}</p><p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p></div><div class="flex flex-col sm:flex-row gap-3 mt-6"><button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button><button class="add-to-list-btn flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button></div></div>`;
+                
+                const castUrl = `wvc-x-callback://open?url=${encodeURIComponent(movie.url)}&title=${encodeURIComponent(movie.title)}`;
+
+                DOMElements.detailsModal.content.innerHTML = `
+                    <div class="relative">
+                        <img src="${movie.backdrop}" alt="${movie.title}" class="w-full h-48 md:h-72 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/e5e7eb?text=Imagem+Indisponível';">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div>
+                        <button id="close-details-modal" class="absolute top-3 right-3 bg-black/50 rounded-full p-1.5"><i data-lucide="x"></i></button>
+                    </div>
+                    <div class="p-4 md:p-6">
+                        <h2 class="text-3xl font-bold">${movie.title} (${movie.year})</h2>
+                        <div class="flex flex-wrap items-center my-2 gap-x-4 gap-y-2 text-sm" style="color: var(--text-secondary)">
+                            <div class="flex items-center text-yellow-400">${'★'.repeat(Math.round(movie.rating))}${'☆'.repeat(5 - Math.round(movie.rating))} <span class="ml-2" style="color: var(--text-primary);">${movie.rating}</span></div>
+                            <span>${movie.genres.join(', ')}</span>
+                        </div>
+                        <p class="my-4">${movie.synopsis}</p>
+                        <div class="text-sm space-y-1">
+                            <p><strong style="color: var(--text-primary)">Diretor:</strong> ${movie.director}</p>
+                            <p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3 mt-6">
+                            <button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
+                            <button class="add-to-list-btn flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button>
+                            <a href="${castUrl}" class="p-3 flex items-center justify-center border rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" title="Transmitir"><i data-lucide="cast"></i></a>
+                            <a href="${movie.url}" download="${movie.title}" class="p-3 flex items-center justify-center border rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" title="Baixar"><i data-lucide="download"></i></a>
+                        </div>
+                        <div class="mt-8 border-t pt-6" style="border-color: var(--card-hover-bg);">
+                            <h3 class="text-xl font-bold mb-4">Avalie e Comente</h3>
+                            <div class="star-rating mb-4 flex items-center gap-1" data-id="movie-${movie.id}">
+                                ${[1,2,3,4,5].map(i => `<i data-lucide="star" data-value="${i}" class="w-7 h-7"></i>`).join('')}
+                            </div>
+                            <form class="comment-form" data-id="movie-${movie.id}">
+                                <textarea class="w-full p-2 rounded-md border-none mb-2" style="background-color: var(--card-hover-bg); color: var(--text-primary);" placeholder="Deixe seu comentário..."></textarea>
+                                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition">Enviar</button>
+                            </form>
+                            <div class="comments-section mt-4 space-y-3"></div>
+                        </div>
+                    </div>`;
+                
                 updateAddToListButton(DOMElements.detailsModal.content.querySelector('.add-to-list-btn'));
                 DOMElements.detailsModal.container.classList.add('active');
                 lucide.createIcons();
                 document.getElementById('close-details-modal').onclick = () => DOMElements.detailsModal.container.classList.remove('active');
+                setupRatingAndComments(`movie-${movie.id}`);
             }
 
             function openPlayerModal(movieId) {
@@ -373,31 +421,49 @@
                             </select>
                         </div>
                         <div id="episodes-list" class="mt-6 space-y-3"></div>
+                        <div class="mt-8 border-t pt-6" style="border-color: var(--card-hover-bg);">
+                            <h3 class="text-xl font-bold mb-4">Avalie e Comente</h3>
+                            <div class="star-rating mb-4 flex items-center gap-1" data-id="series-${series.id}">
+                                ${[1,2,3,4,5].map(i => `<i data-lucide="star" data-value="${i}" class="w-7 h-7"></i>`).join('')}
+                            </div>
+                            <form class="comment-form" data-id="series-${series.id}">
+                                <textarea class="w-full p-2 rounded-md border-none mb-2" style="background-color: var(--card-hover-bg); color: var(--text-primary);" placeholder="Deixe seu comentário..."></textarea>
+                                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition">Enviar</button>
+                            </form>
+                            <div class="comments-section mt-4 space-y-3"></div>
+                        </div>
                     </div>
                 `;
 
                 const renderEpisodes = (seasonId) => {
                     const season = series.seasons.find(s => s.id === seasonId);
                     if (!season) return;
-                    document.getElementById('episodes-list').innerHTML = season.episodes.map((ep, index) => `
-                        <button class="episode-item w-full text-left p-3 rounded-lg hoverable-item flex items-center gap-4" data-video-url="${ep.videoUrl}" data-video-title="${ep.title}">
+                    document.getElementById('episodes-list').innerHTML = season.episodes.map((ep, index) => {
+                        const castUrl = `wvc-x-callback://open?url=${encodeURIComponent(ep.videoUrl)}&title=${encodeURIComponent(ep.title)}`;
+                        return `
+                        <div class="w-full text-left p-3 rounded-lg hoverable-item flex items-center gap-4">
                             <span class="text-lg font-semibold" style="color: var(--text-secondary);">${index + 1}</span>
                             <div class="flex-1"><p class="font-semibold">${ep.title}</p></div>
-                            <i data-lucide="play-circle" class="w-6 h-6" style="color: var(--text-secondary);"></i>
-                        </button>
-                    `).join('');
+                            <div class="flex items-center gap-2">
+                                <a href="${castUrl}" class="p-2 rounded-full hover:bg-[var(--card-hover-bg)]" title="Transmitir"><i data-lucide="cast" class="w-5 h-5"></i></a>
+                                <a href="${ep.videoUrl}" download="${ep.title}" class="p-2 rounded-full hover:bg-[var(--card-hover-bg)]" title="Baixar"><i data-lucide="download" class="w-5 h-5"></i></a>
+                                <button class="episode-item p-2 rounded-full hover:bg-[var(--card-hover-bg)]" data-video-url="${ep.videoUrl}" data-video-title="${ep.title}" title="Assistir">
+                                    <i data-lucide="play-circle" class="w-6 h-6"></i>
+                                </button>
+                            </div>
+                        </div>`
+                    }).join('');
                     lucide.createIcons();
                 };
 
                 const seasonSelector = document.getElementById('season-selector');
-                seasonSelector.addEventListener('change', (e) => {
-                    renderEpisodes(e.target.value);
-                });
+                seasonSelector.addEventListener('change', (e) => renderEpisodes(e.target.value));
 
                 if (series.seasons.length > 0) {
                     renderEpisodes(series.seasons[0].id);
                 }
                 lucide.createIcons();
+                setupRatingAndComments(`series-${series.id}`);
             }
 
             // --- FUNÇÕES DE UTILIDADE E LÓGICA ---
@@ -456,6 +522,87 @@
                 });
                 lucide.createIcons();
             }
+            
+            // --- LÓGICA DE BUSCA ---
+            function performSearch() {
+                const query = DOMElements.searchModal.input.value.toLowerCase().trim();
+                if (query.length < 2) {
+                    DOMElements.searchModal.results.innerHTML = '<p class="text-center p-4" style="color: var(--text-secondary);">Digite pelo menos 2 caracteres para buscar.</p>';
+                    return;
+                }
+
+                const movieResults = db.movies.filter(m => m.title.toLowerCase().includes(query));
+                const seriesResults = db.series.filter(s => s.title.toLowerCase().includes(query));
+
+                let resultsHTML = '';
+                if (movieResults.length > 0) {
+                    resultsHTML += `<h3 class="text-xl font-bold p-4">Filmes</h3><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4 p-4">${movieResults.map(createGridMovieCardHTML).join('')}</div>`;
+                }
+                if (seriesResults.length > 0) {
+                    resultsHTML += `<h3 class="text-xl font-bold p-4">Séries</h3><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4 p-4">${seriesResults.map(createSeriesCardHTML).join('')}</div>`;
+                }
+
+                if (resultsHTML === '') {
+                    DOMElements.searchModal.results.innerHTML = '<p class="text-center p-4" style="color: var(--text-secondary);">Nenhum resultado encontrado.</p>';
+                } else {
+                    DOMElements.searchModal.results.innerHTML = resultsHTML;
+                }
+                lucide.createIcons();
+            }
+
+            // --- LÓGICA DE AVALIAÇÃO E COMENTÁRIOS ---
+            function setupRatingAndComments(contentId) {
+                const ratingContainer = document.querySelector(`.star-rating[data-id="${contentId}"]`);
+                const commentForm = document.querySelector(`.comment-form[data-id="${contentId}"]`);
+                const commentsSection = document.querySelector(`.comment-form[data-id="${contentId}"] + .comments-section`);
+
+                // Carregar e exibir
+                const savedRating = localStorage.getItem(`rating_${contentId}`) || 0;
+                const savedComments = JSON.parse(localStorage.getItem(`comments_${contentId}`)) || [];
+                
+                function displayStars(rating) {
+                    ratingContainer.querySelectorAll('i').forEach(star => {
+                        const starValue = parseInt(star.dataset.value);
+                        star.style.fill = starValue <= rating ? 'var(--star-color)' : 'none';
+                        star.style.color = starValue <= rating ? 'var(--star-color)' : 'currentColor';
+                    });
+                }
+
+                function displayComments() {
+                    commentsSection.innerHTML = savedComments.map(comment => `
+                        <div class="p-3 rounded-md" style="background-color: var(--card-hover-bg);">
+                            <p>${comment.text}</p>
+                            <p class="text-xs mt-1" style="color: var(--text-secondary);">${new Date(comment.date).toLocaleString()}</p>
+                        </div>
+                    `).join('');
+                }
+
+                displayStars(savedRating);
+                displayComments();
+
+                // Event Listeners
+                ratingContainer.addEventListener('click', e => {
+                    const star = e.target.closest('i');
+                    if (star) {
+                        const newRating = star.dataset.value;
+                        localStorage.setItem(`rating_${contentId}`, newRating);
+                        displayStars(newRating);
+                    }
+                });
+
+                commentForm.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const textarea = e.target.querySelector('textarea');
+                    const commentText = textarea.value.trim();
+                    if (commentText) {
+                        savedComments.unshift({ text: commentText, date: new Date() });
+                        localStorage.setItem(`comments_${contentId}`, JSON.stringify(savedComments));
+                        displayComments();
+                        textarea.value = '';
+                    }
+                });
+            }
+
 
             function setupEventListeners() {
                 DOMElements.profileBtn.onclick = (e) => { e.stopPropagation(); DOMElements.profileMenu.classList.toggle('hidden'); };
@@ -472,6 +619,14 @@
                 DOMElements.desktopListBtn.onclick = renderMyListPage;
                 DOMElements.desktopMoviesBtn.onclick = () => renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML);
                 DOMElements.desktopSeriesBtn.onclick = () => renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createSeriesCardHTML);
+
+                // --- Event Listeners de Busca ---
+                const openSearch = () => DOMElements.searchModal.container.classList.add('active');
+                DOMElements.desktopSearchBtn.onclick = openSearch;
+                DOMElements.mobileNavBar.querySelector('[data-nav="search"]').onclick = openSearch;
+                DOMElements.searchModal.closeBtn.onclick = () => DOMElements.searchModal.container.classList.remove('active');
+                DOMElements.searchModal.input.addEventListener('input', performSearch);
+
 
                 // Navegação da Barra Inferior (Mobile)
                 DOMElements.mobileNavBar.addEventListener('click', (e) => {
@@ -499,7 +654,10 @@
                 document.addEventListener('click', (e) => {
                     const target = e.target;
                     const detailsBtn = target.closest('.details-btn');
-                    if (detailsBtn) return showDetailsModal(detailsBtn.dataset.movieId);
+                    if (detailsBtn) {
+                        DOMElements.searchModal.container.classList.remove('active');
+                        return showDetailsModal(detailsBtn.dataset.movieId);
+                    }
 
                     const watchBtn = target.closest('.watch-btn');
                     if (watchBtn) return openPlayerModal(watchBtn.dataset.movieId);
@@ -508,7 +666,10 @@
                     if (listBtn) return toggleMovieInList(listBtn.dataset.movieId);
                     
                     const seriesCard = target.closest('.series-card');
-                    if (seriesCard) return renderSeriesDetailsPage(seriesCard.dataset.seriesId);
+                    if (seriesCard) {
+                         DOMElements.searchModal.container.classList.remove('active');
+                        return renderSeriesDetailsPage(seriesCard.dataset.seriesId);
+                    }
 
                     const episodeItem = target.closest('.episode-item');
                     if (episodeItem) return openPlayerModalForEpisode(episodeItem.dataset.videoUrl, episodeItem.dataset.videoTitle);
