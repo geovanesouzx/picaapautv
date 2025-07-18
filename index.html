@@ -18,6 +18,8 @@
             --overlay-bg: rgba(12, 10, 9, 0.95);
             --card-hover-bg: #374151; /* gray-700 */
             --accent-color: #a855f7; /* purple-500 */
+            --hero-text-primary: #ffffff;
+            --hero-text-secondary: #e5e7eb;
         }
         html.light {
             --background: #f3f4f6; --text-primary: #1f2937; --text-secondary: #4b5563;
@@ -25,6 +27,8 @@
             --overlay-bg: rgba(243, 244, 246, 0.95);
             --card-hover-bg: #e5e7eb; /* gray-200 */
             --accent-color: #8b5cf6; /* violet-500 */
+            --hero-text-primary: #111827; /* gray-900 */
+            --hero-text-secondary: #374151; /* gray-700 */
         }
         body {
             font-family: 'Poppins', sans-serif;
@@ -170,11 +174,11 @@
                     <div class="absolute inset-0"><img src="${heroMovie.backdrop}" alt="${heroMovie.title}" class="w-full h-full object-cover"><div class="absolute inset-0 hero-gradient-left"></div><div class="absolute inset-0 hero-gradient-bottom"></div></div>
                     <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="max-w-xl">
-                            <h1 class="text-4xl md:text-6xl font-extrabold my-3 text-white">${heroMovie.title}</h1>
-                            <p class="text-lg md:text-xl mb-6 leading-relaxed text-gray-200">${heroMovie.synopsis}</p>
+                            <h1 class="text-4xl md:text-6xl font-extrabold my-3" style="color: var(--hero-text-primary);">${heroMovie.title}</h1>
+                            <p class="text-lg md:text-xl mb-6 leading-relaxed" style="color: var(--hero-text-secondary);">${heroMovie.synopsis}</p>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                                 <button class="details-btn flex items-center justify-center bg-white text-black font-bold py-3.5 px-8 rounded-md transition hover:bg-gray-300" data-movie-id="${heroMovie.id}"><i data-lucide="info" class="mr-2"></i>Mais Informações</button>
-                                <button class="add-to-list-btn flex items-center justify-center bg-gray-100 bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm text-white font-bold py-3.5 px-8 rounded-full transition duration-300" data-movie-id="${heroMovie.id}"></button>
+                                <button class="add-to-list-btn flex items-center justify-center bg-gray-500 bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm font-bold py-3.5 px-8 rounded-full transition duration-300" style="color: var(--hero-text-primary);" data-movie-id="${heroMovie.id}"></button>
                             </div>
                         </div>
                     </div>`;
