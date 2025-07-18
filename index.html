@@ -38,8 +38,11 @@
         .carousel-container::-webkit-scrollbar { display: none; }
         .modal { transition: opacity 0.3s, visibility 0.3s; visibility: hidden; opacity: 0; }
         .modal.active { visibility: visible; opacity: 1; }
-        #mobile-nav { transition: transform 0.3s ease-in-out; }
+        #mobile-nav, .mobile-overlay { transition: opacity 0.3s, visibility 0.3s; visibility: hidden; opacity: 0; }
+        #mobile-nav.active, .mobile-overlay.active { visibility: visible; opacity: 1; }
         .hoverable-item:hover { background-color: var(--card-hover-bg); }
+        .mobile-nav-item { color: var(--text-secondary); }
+        .mobile-nav-item.active { color: var(--accent-color); }
     </style>
 </head>
 <body class="pb-20 md:pb-0">
@@ -67,7 +70,7 @@
     </header>
 
     <!-- Painel de Navegação Mobile -->
-    <div id="mobile-nav" class="fixed top-0 left-0 h-full w-full z-50 transform -translate-x-full lg:hidden" style="background-color: var(--background)">
+    <div id="mobile-nav" class="modal fixed top-0 left-0 h-full w-full z-50 lg:hidden" style="background-color: var(--background)">
         <div class="p-4">
             <div class="flex justify-between items-center mb-8">
                 <a href="#" class="text-2xl font-bold"><span class="text-blue-500">Cine</span><span class="text-purple-500">Verse</span></a>
@@ -91,21 +94,31 @@
         </div>
     </main>
     
-    <!-- Modal de Detalhes -->
-    <div id="details-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
-        <div id="details-modal-content" class="rounded-lg relative w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="background-color: var(--card-bg);">
-            <!-- Conteúdo do Modal de Detalhes será inserido aqui -->
+    <!-- Barra de Navegação Inferior (Mobile) -->
+    <div class="fixed bottom-0 left-0 right-0 h-20 z-40 lg:hidden" style="background-color: var(--background); border-top: 1px solid var(--card-bg);">
+        <div class="flex justify-around items-center h-full">
+            <a href="#" class="mobile-nav-item active flex flex-col items-center p-2"><i data-lucide="home" class="w-6 h-6 mb-1"></i><span class="text-sm">Início</span></a>
+            <button id="mobile-search-button" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="search" class="w-6 h-6 mb-1"></i><span class="text-sm">Buscar</span></button>
+            <a href="#" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="list-video" class="w-6 h-6 mb-1"></i><span class="text-sm">Minha Lista</span></a>
+            <button id="mobile-profile-button" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="user-2" class="w-6 h-6 mb-1"></i><span class="text-sm">Perfil</span></button>
         </div>
     </div>
     
+    <!-- Modal de Detalhes -->
+    <div id="details-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
+        <div id="details-modal-content" class="rounded-lg relative w-full max-w-4xl max-h-[90vh] overflow-y-auto" style="background-color: var(--card-bg);"></div>
+    </div>
+    
     <!-- Modal do Leitor de Vídeo -->
-    <div id="player-modal" class="modal fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-[51]">
-        <div class="p-4 rounded-lg relative w-11/12 md:w-2/3 lg:w-3/4" style="background-color: var(--card-bg)">
-            <button id="close-player-modal" class="absolute -top-3 -right-3 bg-white text-black rounded-full p-1"><i data-lucide="x"></i></button>
-            <div id="player-container" class="aspect-video">
-                <!-- Leitor de vídeo (iframe ou video) será inserido aqui -->
-            </div>
-        </div>
+    <div id="player-modal" class="modal fixed inset-0 bg-black z-[51]">
+        <div id="player-container" class="w-full h-full"></div>
+        <button id="close-player-modal" class="absolute top-5 right-5 bg-black/50 rounded-full p-2"><i data-lucide="x"></i></button>
+    </div>
+    
+    <!-- Overlay de Perfil Mobile -->
+    <div id="mobile-profile-overlay" class="modal fixed inset-0 z-50 p-4" style="background-color: var(--overlay-bg);">
+        <div class="flex justify-end mb-4"><button id="close-profile-overlay"><i data-lucide="x" class="w-7 h-7"></i></button></div>
+        <div class="mt-8 flex flex-col items-center space-y-6"><h2 class="text-2xl font-bold">Perfil</h2><button id="mobile-theme-toggle" class="p-4 rounded-md text-lg flex items-center justify-center hoverable-item w-full max-w-xs">Mudar Tema <i data-lucide="sun" class="w-5 h-5 ml-2"></i></button></div>
     </div>
 
     <div id="loading-spinner" class="fixed inset-0 flex justify-center items-center z-[60]" style="background-color: var(--background);"><div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div></div>
@@ -114,19 +127,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             const db = {
                 movies: [
-                    { id: 2, title: "Pica-Pau: O Filme", year: "2017", rating: 3.8, genres: ["Comédia", "Animação", "Aventura"], director: "Alex Zamm", cast: ["Timothy Omundson", "Thaila Ayala"], synopsis: "O Pica-Pau está metido em mais uma de suas brigas por território. Os inimigos da vez são o vigarista Lance Walters e sua namorada Vanessa.", poster: "https://br.web.img2.acsta.net/pictures/17/08/25/19/04/419991.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg", playerType: 'iframe', url: "https://www.tokyvideo.com/embed/409976" },
-                    { id: 3, title: "O Segredo dos Animais", year: "2006", rating: 4.1, genres: ["Comédia", "Animação"], director: "Steve Oedekerk", cast: ["Kevin James", "Courteney Cox"], synopsis: "Quando o fazendeiro está fora, todos os animais da fazenda cantam, dançam e se divertem. Mas um dia, um novo bezerro chamado Otis chega e perturba a paz.", poster: "https://i.ibb.co/Txc5mmKp/f2fe6431067e73e3d4dd5c30a5dcaf0f6e8fb6e087d6a6038d7a20451535f49a.jpg", backdrop: "https://www.themoviedb.org/t/p/original/uN9HAmca70S2bM1t2G2xW33a5S2.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/ab/s8/2/o/e/2/s/oe2sy.gaa.mp4" },
-                    { id: 4, title: "A Nova Onda do Imperador", year: "2000", rating: 4.7, genres: ["Comédia", "Animação", "Aventura"], director: "Mark Dindal", cast: ["David Spade", "John Goodman"], synopsis: "O arrogante imperador Kuzco é transformado em uma lhama por sua poderosa conselheira, Yzma. Perdido na selva, a única chance de Kuzco de voltar para casa e reconquistar seu trono repousa em um bondoso camponês chamado Pacha.", poster: "https://image.tmdb.org/t/p/original/qqnnA0mnokmgt5dtzYz5WlLka22.jpg", backdrop: "https://www.themoviedb.org/t/p/original/tH1S52i2BH3t0bA41GoiG8I0a2.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8b/s8/2/k/P/h/x/kPhxy.caa.mp4" },
-                    { id: 5, title: "Orion e o Escuro", year: "2024", rating: 4.6, genres: ["Animação", "Aventura", "Fantasia"], director: "Sean Charmatz", cast: ["Jacob Tremblay", "Paul Walter Hauser"], synopsis: "Um garoto com uma imaginação ativa enfrenta seus medos em uma jornada inesquecível pela noite com seu novo amigo: uma criatura gigante e sorridente chamada Escuro.", poster: "https://image.tmdb.org/t/p/original/qSN76JBBTZ3JjhFYVhvrgGLvjsq.jpg", backdrop: "https://www.themoviedb.org/t/p/original/ehumqaSROy2aN4zJ4n022yL2gA.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/ae/s8/2/4/B/G/w/4BGwy.gaa.mp4" },
-                    { id: 6, title: "Patos!", year: "2023", rating: 4.4, genres: ["Animação", "Aventura", "Comédia"], director: "Benjamin Renner", cast: ["Kumail Nanjiani", "Elizabeth Banks"], synopsis: "Uma família de patos tenta convencer seu pai superprotetor a embarcar nas férias de suas vidas e migrar para o sul durante o inverno.", poster: "https://i.ibb.co/6ccXQW8v/d-Mm-BIb-NA2qt-Wau-Gc-Mo-SJav-Fi-Dv2.jpg", backdrop: "https://www.themoviedb.org/t/p/original/ Meyvn5y4n0d6rS2Sj4T2KiqbL0b.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/26/s8/2/G/0/G/w/G0Gwy.gaa.mp4" },
-                    { id: 7, title: "WiFi Ralph", year: "2018", rating: 4.3, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Seis anos após os eventos de 'Detona Ralph', Ralph e Vanellope, agora amigos, descobrem um roteador wi-fi em seu fliperama, levando-os a uma nova aventura.", poster: "https://i.ibb.co/VpWmFd17/88po-TBTaf-MXaz73v-Yi3c74g0y2k.jpg", backdrop: "https://www.themoviedb.org/t/p/original/88poTBTafMXaz73vYi3c74g0y2k.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/45/s8/2/6/1/J/w/61Jwy.gaa.mp4" },
-                    { id: 8, title: "Detona Ralph", year: "2012", rating: 4.5, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Um vilão de videogame quer provar que pode ser um herói e parte em uma jornada por diferentes jogos, causando estragos por onde passa.", poster: "https://image.tmdb.org/t/p/original/hEIyL9G7QpXKEonUx2HAHRZ1Yqc.jpg", backdrop: "https://www.themoviedb.org/t/p/original/3GgS22uQWJbT32t22L83WnZl9lQ.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/b0/s8/2/0/1/J/w/01Jwy.gaa.mp4" },
-                    { id: 9, title: "Enrolados", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Romance"], director: "Nathan Greno", cast: ["Mandy Moore", "Zachary Levi"], synopsis: "A espirituosa e fugitiva Rapunzel, com seu cabelo mágico de 21 metros de comprimento, se esconde em uma torre. Ela faz um acordo com o charmoso ladrão Flynn Rider para explorar o mundo exterior.", poster: "https://image.tmdb.org/t/p/original/mUQBWnG6zDeoD0TfAq0InjQRmSm.jpg", backdrop: "https://www.themoviedb.org/t/p/original/53YkP2K5j6eI4PvyH4sS1kYd5Y.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/5f/s8/2/g/J/K/t/gJKty.gaa.mp4" },
-                    { id: 10, title: "Elementos", year: "2023", rating: 4.6, genres: ["Animação", "Comédia", "Fantasia", "Romance"], director: "Peter Sohn", cast: ["Leah Lewis", "Mamoudou Athie"], synopsis: "Em uma cidade onde os residentes de fogo, água, terra e ar vivem juntos, uma jovem impetuosa de fogo e um rapaz tranquilo que segue o fluxo descobrem algo elementar: o quanto eles realmente têm em comum.", poster: "https://image.tmdb.org/t/p/original/67kvbJTMhqneAfRHbukdjAKuS76.jpg", backdrop: "https://www.themoviedb.org/t/p/original/96SvkxPe2M22om2q0a92xKNflxQ.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/eb/s8/2/c/y/v/u/cyvuy.gaa.mp4" },
-                    { id: 11, title: "Moana 2", year: "2024", rating: 4.9, genres: ["Animação", "Aventura", "Fantasia"], director: "David G. Derrick Jr.", cast: ["Auli'i Cravalho", "Dwayne Johnson"], synopsis: "Moana embarca em uma nova e expansiva jornada com Maui e uma nova tripulação de marinheiros improváveis. Depois de receber um chamado inesperado de seus ancestrais, Moana deve viajar para os mares distantes da Oceania.", poster: "https://image.tmdb.org/t/p/original/e7W9DlmFQkIvqxPZOIEjH2t34Mt.jpg", backdrop: "https://www.themoviedb.org/t/p/original/5AK5zru2s4I402e82Q2rF21a24.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/04/s8/2/s/x/t/s/sxtsy.gaa.mp4" }
+                    { id: 2, title: "Pica-Pau: O Filme", year: "2017", rating: 3.8, genres: ["Comédia", "Animação", "Aventura"], director: "Alex Zamm", cast: ["Timothy Omundson", "Thaila Ayala"], synopsis: "O Pica-Pau está metido em mais uma de suas brigas por território...", poster: "https://br.web.img2.acsta.net/pictures/17/08/25/19/04/419991.jpg", backdrop: "https://www.themoviedb.org/t/p/original/rS3uTcmmS8b0Yw3aLp4iS2B2T21.jpg", playerType: 'iframe', url: "https://www.tokyvideo.com/embed/409976", progress: 0 },
+                    { id: 3, title: "O Segredo dos Animais", year: "2006", rating: 4.1, genres: ["Comédia", "Animação"], director: "Steve Oedekerk", cast: ["Kevin James", "Courteney Cox"], synopsis: "Quando o fazendeiro está fora, todos os animais da fazenda cantam e dançam...", poster: "https://i.ibb.co/Txc5mmKp/f2fe6431067e73e3d4dd5c30a5dcaf0f6e8fb6e087d6a6038d7a20451535f49a.jpg", backdrop: "https://www.themoviedb.org/t/p/original/uN9HAmca70S2bM1t2G2xW33a5S2.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/ab/s8/2/o/e/2/s/oe2sy.gaa.mp4", progress: 50 },
+                    { id: 4, title: "A Nova Onda do Imperador", year: "2000", rating: 4.7, genres: ["Comédia", "Animação", "Aventura"], director: "Mark Dindal", cast: ["David Spade", "John Goodman"], synopsis: "O arrogante imperador Kuzco é transformado em uma lhama...", poster: "https://image.tmdb.org/t/p/original/qqnnA0mnokmgt5dtzYz5WlLka22.jpg", backdrop: "https://www.themoviedb.org/t/p/original/tH1S52i2BH3t0bA41GoiG8I0a2.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe1/8b/s8/2/k/P/h/x/kPhxy.caa.mp4", progress: 0 },
+                    { id: 5, title: "Orion e o Escuro", year: "2024", rating: 4.6, genres: ["Animação", "Aventura", "Fantasia"], director: "Sean Charmatz", cast: ["Jacob Tremblay", "Paul Walter Hauser"], synopsis: "Um garoto com uma imaginação ativa enfrenta seus medos numa jornada pela noite...", poster: "https://image.tmdb.org/t/p/original/qSN76JBBTZ3JjhFYVhvrgGLvjsq.jpg", backdrop: "https://www.themoviedb.org/t/p/original/ehumqaSROy2aN4zJ4n022yL2gA.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/ae/s8/2/4/B/G/w/4BGwy.gaa.mp4", progress: 0 },
+                    { id: 6, title: "Patos!", year: "2023", rating: 4.4, genres: ["Animação", "Aventura", "Comédia"], director: "Benjamin Renner", cast: ["Kumail Nanjiani", "Elizabeth Banks"], synopsis: "Uma família de patos tenta convencer seu pai a embarcar nas férias de suas vidas...", poster: "https://i.ibb.co/6ccXQW8v/d-Mm-BIb-NA2qt-Wau-Gc-Mo-SJav-Fi-Dv2.jpg", backdrop: "https://www.themoviedb.org/t/p/original/ Meyvn5y4n0d6rS2Sj4T2KiqbL0b.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/26/s8/2/G/0/G/w/G0Gwy.gaa.mp4", progress: 20 },
+                    { id: 7, title: "WiFi Ralph", year: "2018", rating: 4.3, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Ralph e Vanellope descobrem um roteador wi-fi em seu fliperama...", poster: "https://i.ibb.co/VpWmFd17/88po-TBTaf-MXaz73v-Yi3c74g0y2k.jpg", backdrop: "https://www.themoviedb.org/t/p/original/88poTBTafMXaz73vYi3c74g0y2k.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/45/s8/2/6/1/J/w/61Jwy.gaa.mp4", progress: 0 },
+                    { id: 8, title: "Detona Ralph", year: "2012", rating: 4.5, genres: ["Animação", "Comédia", "Aventura"], director: "Rich Moore", cast: ["John C. Reilly", "Sarah Silverman"], synopsis: "Um vilão de videogame quer provar que pode ser um herói...", poster: "https://image.tmdb.org/t/p/original/hEIyL9G7QpXKEonUx2HAHRZ1Yqc.jpg", backdrop: "https://www.themoviedb.org/t/p/original/3GgS22uQWJbT32t22L83WnZl9lQ.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/b0/s8/2/0/1/J/w/01Jwy.gaa.mp4", progress: 0 },
+                    { id: 9, title: "Enrolados", year: "2010", rating: 4.8, genres: ["Animação", "Aventura", "Romance"], director: "Nathan Greno", cast: ["Mandy Moore", "Zachary Levi"], synopsis: "Rapunzel, com seu cabelo mágico, faz um acordo com o ladrão Flynn Rider...", poster: "https://image.tmdb.org/t/p/original/mUQBWnG6zDeoD0TfAq0InjQRmSm.jpg", backdrop: "https://www.themoviedb.org/t/p/original/53YkP2K5j6eI4PvyH4sS1kYd5Y.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/5f/s8/2/g/J/K/t/gJKty.gaa.mp4", progress: 80 },
+                    { id: 10, title: "Elementos", year: "2023", rating: 4.6, genres: ["Animação", "Comédia", "Fantasia", "Romance"], director: "Peter Sohn", cast: ["Leah Lewis", "Mamoudou Athie"], synopsis: "Numa cidade onde vivem residentes de fogo, água, terra e ar...", poster: "https://image.tmdb.org/t/p/original/67kvbJTMhqneAfRHbukdjAKuS76.jpg", backdrop: "https://www.themoviedb.org/t/p/original/96SvkxPe2M22om2q0a92xKNflxQ.jpg", playerType: 'video', url: "https://1a-1791.com/video/fww1/eb/s8/2/c/y/v/u/cyvuy.gaa.mp4", progress: 0 },
+                    { id: 11, title: "Moana 2", year: "2024", rating: 4.9, genres: ["Animação", "Aventura", "Fantasia"], director: "David G. Derrick Jr.", cast: ["Auli'i Cravalho", "Dwayne Johnson"], synopsis: "Moana embarca numa nova jornada com Maui...", poster: "https://image.tmdb.org/t/p/original/e7W9DlmFQkIvqxPZOIEjH2t34Mt.jpg", backdrop: "https://www.themoviedb.org/t/p/original/5AK5zru2s4I402e82Q2rF21a24.jpg", playerType: 'video', url: "https://1a-1791.com/video/fwe2/04/s8/2/s/x/t/s/sxtsy.gaa.mp4", progress: 0 }
                 ],
                 carousels: [
                     { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
+                    { title: "Continuar a Assistir", filter: (m) => m.progress > 0 && m.progress < 100 },
                     { title: "Animações Imperdíveis", filter: (m) => m.genres.includes("Animação") },
                     { title: "Comédias para Rir à Vontade", filter: (m) => m.genres.includes("Comédia") },
                     { title: "Aventuras Épicas", filter: (m) => m.genres.includes("Aventura") }
@@ -134,7 +148,7 @@
             };
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, carouselsContainer: document.getElementById('carousels-container'), heroSection: document.getElementById('hero-section')
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, carouselsContainer: document.getElementById('carousels-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle')
             };
 
             function renderHero() {
@@ -147,6 +161,7 @@
                             <p class="text-lg md:text-xl mb-6 leading-relaxed text-gray-200">${heroMovie.synopsis}</p>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                                 <button class="details-btn flex items-center justify-center bg-white text-black font-bold py-3.5 px-8 rounded-md transition hover:bg-gray-300" data-movie-id="${heroMovie.id}"><i data-lucide="info" class="mr-2"></i>Mais Informações</button>
+                                <button class="add-to-list-btn flex items-center justify-center bg-gray-100 bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm text-white font-bold py-3.5 px-8 rounded-full transition duration-300" data-movie-id="${heroMovie.id}"><i data-lucide="plus" class="mr-2"></i>Minha Lista</button>
                             </div>
                         </div>
                     </div>`;
@@ -171,10 +186,12 @@
             }
 
             function createMovieCardHTML(movie) {
+                const progressBar = movie.progress > 0 ? `<div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-500/50 rounded-b-lg"><div class="h-full bg-purple-500 rounded-b-lg" style="width: ${movie.progress}%;"></div></div>` : '';
                 return `
                     <div class="details-btn flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/5 lg:w-1/6 rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-movie-id="${movie.id}">
                         <div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);">
                             <img loading="lazy" src="${movie.poster}" alt="Pôster de ${movie.title}" class="w-full h-full object-cover">
+                            ${progressBar}
                         </div>
                     </div>`;
             }
@@ -202,8 +219,7 @@
                         </div>
                         <div class="flex flex-col sm:flex-row gap-3 mt-6">
                             <button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
-                            <button onclick="alert('Funcionalidade de transmissão em desenvolvimento!')" class="flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);"><i data-lucide="cast" class="mr-2"></i>Transmitir</button>
-                            <button onclick="alert('Funcionalidade de download em desenvolvimento!')" class="flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);"><i data-lucide="download" class="mr-2"></i>Baixar</button>
+                            <button class="add-to-list-btn flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"><i data-lucide="plus" class="mr-2"></i>Minha Lista</button>
                         </div>
                     </div>`;
                 
@@ -217,16 +233,27 @@
                 if (!movie) return;
                 
                 const playerContainer = DOMElements.playerModal.playerContainer;
-                playerContainer.innerHTML = (movie.playerType === 'iframe')
-                    ? `<iframe class="w-full h-full" src="${movie.url}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
-                    : `<video class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
                 
+                if (movie.playerType === 'iframe') {
+                    playerContainer.innerHTML = `<iframe id="player-iframe" class="w-full h-full" src="${movie.url}" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+                } else if (movie.playerType === 'video') {
+                    playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
+                }
+                
+                DOMElements.detailsModal.container.classList.remove('active');
                 DOMElements.playerModal.container.classList.add('active');
+
+                const playerElement = playerContainer.querySelector('iframe, video');
+                if (playerElement && playerElement.requestFullscreen) {
+                    playerElement.onload = () => { try { playerElement.requestFullscreen(); } catch(e) { console.warn("Fullscreen failed:", e); } };
+                    playerElement.oncanplay = () => { try { playerElement.requestFullscreen(); } catch(e) { console.warn("Fullscreen failed:", e); } };
+                }
             }
 
             function closePlayerModal() {
                 DOMElements.playerModal.playerContainer.innerHTML = '';
                 DOMElements.playerModal.container.classList.remove('active');
+                if (document.fullscreenElement) document.exitFullscreen();
             }
 
             function toggleTheme() {
@@ -239,39 +266,55 @@
             function updateThemeIcons() {
                 const isLight = DOMElements.html.classList.contains('light');
                 const newIconName = isLight ? 'moon' : 'sun';
-                const btn = DOMElements.themeToggle;
-                if (btn) {
-                    const icon = btn.querySelector('i, svg');
-                    if (icon) {
-                         const newIconEl = document.createElement('i');
-                         newIconEl.setAttribute('data-lucide', newIconName);
-                         for (const attr of icon.attributes) if (attr.name !== 'data-lucide') newIconEl.setAttribute(attr.name, attr.value);
-                         icon.parentNode.replaceChild(newIconEl, icon);
+                [DOMElements.themeToggle, DOMElements.mobileThemeToggle].forEach(btn => {
+                    if (btn) {
+                        const icon = btn.querySelector('i, svg');
+                        if (icon) {
+                             const newIconEl = document.createElement('i');
+                             newIconEl.setAttribute('data-lucide', newIconName);
+                             for (const attr of icon.attributes) if (attr.name !== 'data-lucide') newIconEl.setAttribute(attr.name, attr.value);
+                             icon.parentNode.replaceChild(newIconEl, icon);
+                        }
                     }
-                }
+                });
+                lucide.createIcons();
+            }
+            
+            function toggleInList(button) {
+                const icon = button.querySelector('i');
+                if (!icon) return;
+                const currentIcon = icon.getAttribute('data-lucide');
+                const newIcon = currentIcon === 'plus' ? 'check' : 'plus';
+                icon.setAttribute('data-lucide', newIcon);
                 lucide.createIcons();
             }
 
             function setupEventListeners() {
                 DOMElements.profileBtn.onclick = (e) => { e.stopPropagation(); DOMElements.profileMenu.classList.toggle('hidden'); };
                 DOMElements.themeToggle.onclick = toggleTheme;
-                DOMElements.hamburgerBtn.onclick = () => DOMElements.mobileNav.classList.remove('-translate-x-full');
-                DOMElements.closeMobileNav.onclick = () => DOMElements.mobileNav.classList.add('-translate-x-full');
+                DOMElements.hamburgerBtn.onclick = () => DOMElements.mobileNav.classList.add('active');
+                DOMElements.closeMobileNav.onclick = () => DOMElements.mobileNav.classList.remove('active');
+                
+                DOMElements.mobileProfileBtn.onclick = () => DOMElements.mobileProfileOverlay.classList.add('active');
+                DOMElements.closeProfileOverlay.onclick = () => DOMElements.mobileProfileOverlay.classList.remove('active');
+                DOMElements.mobileThemeToggle.onclick = toggleTheme;
                 
                 document.addEventListener('click', (e) => {
-                    if (e.target.closest('.details-btn')) {
-                        showDetailsModal(e.target.closest('.details-btn').dataset.movieId);
-                    }
-                    if (e.target.closest('.watch-btn')) {
-                        openPlayerModal(e.target.closest('.watch-btn').dataset.movieId);
-                    }
+                    const detailsBtn = e.target.closest('.details-btn');
+                    if (detailsBtn) showDetailsModal(detailsBtn.dataset.movieId);
+
+                    const watchBtn = e.target.closest('.watch-btn');
+                    if (watchBtn) openPlayerModal(watchBtn.dataset.movieId);
+                    
+                    const listBtn = e.target.closest('.add-to-list-btn');
+                    if (listBtn) toggleInList(listBtn);
+                    
                     if (!DOMElements.profileDropdownContainer.contains(e.target)) {
                         DOMElements.profileMenu.classList.add('hidden');
                     }
                 });
 
                 DOMElements.playerModal.closeBtn.onclick = closePlayerModal;
-                DOMElements.playerModal.container.onclick = (e) => { if (e.target === DOMElements.playerModal.container) closePlayerModal(); };
             }
             
             function init() {
