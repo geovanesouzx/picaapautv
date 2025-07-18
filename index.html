@@ -309,7 +309,23 @@
                     }
                 ],
                 liveChannels: [
-                    { id: 'sbt', title: 'SBT', embedUrl: 'https://embedmax.site/canais/sbtsp/', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/SBT_logo_2014.svg/2048px-SBT_logo_2014.svg.png'}
+                    { id: 'sbt', title: 'SBT', embedUrl: 'https://embedmax.site/canais/sbtsp/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/sbt.webp'},
+                    { id: 'globo', title: 'GLOBO', embedUrl: 'https://embedmax.site/canais/globosp1/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/globosp.webp'},
+                    { id: 'record', title: 'RECORD', embedUrl: 'https://embedmax.site/canais/recordsp/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/recordtv.webp'},
+                    { id: 'amc', title: 'AMC', embedUrl: 'https://embedmax.site/canais/amc/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/amc.webp'},
+                    { id: 'sportv', title: 'SPORT TV', embedUrl: 'https://embedmax.site/canais/sportv/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/sportv.png'},
+                    { id: 'sportv3', title: 'SPORT TV 3', embedUrl: 'https://embedmax.site/canais/sportv3/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/sportv.png'},
+                    { id: 'space', title: 'SPACE', embedUrl: 'https://embedmax.site/canais/space/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/space.webp'},
+                    { id: 'comedy-central', title: 'Comedy Central', embedUrl: 'https://embedmax.site/canais/comedycentral/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/comedycentral.png'},
+                    { id: 'premiere', title: 'PREMIERE', embedUrl: 'https://embedmax.site/canais/premiere/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/premiere.png'},
+                    { id: 'premiere-2', title: 'PREMIERE 2', embedUrl: 'https://embedmax.site/canais/premiere2/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/premiere.png'},
+                    { id: 'premiere-3', title: 'PREMIERE 3', embedUrl: 'https://embedmax.site/canais/premiere3/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/premiere.png'},
+                    { id: 'premiere-4', title: 'PREMIERE 4', embedUrl: 'https://embedmax.site/canais/premiere4/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/premiere.png'},
+                    { id: 'espn', title: 'ESPN', embedUrl: 'https://embedmax.site/canais/espn/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/espn.webp'},
+                    { id: 'espn-2', title: 'ESPN 2', embedUrl: 'https://embedmax.site/canais/espn2/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/espn.webp'},
+                    { id: 'band', title: 'BAND', embedUrl: 'https://embedmax.site/canais/band/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/band.webp'},
+                    { id: 'bis', title: 'BIS', embedUrl: 'https://embedmax.site/canais/bis/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/bis.png'},
+                    { id: 'national-geographic', title: 'NATIONAL GEOGRAPHIC', embedUrl: 'https://embedmax.site/canais/nationalgeographic/', logo: 'https://embedmax.site/wp-content/uploads/2025/06/natgeo.png'},
                 ],
                 carousels: [
                     { title: "Adicionados Recentemente", filter: (item) => true, sort: (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded) },
@@ -687,7 +703,7 @@
                 updateActiveNav('live');
                 let contentHTML = `<div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-2xl md:text-3xl font-bold mb-8">TV Ao Vivo</h2>`;
                 if (db.liveChannels.length > 0) {
-                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${db.liveChannels.map(createLiveChannelCardHTML).join('')}</div>`;
+                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">${db.liveChannels.map(createLiveChannelCardHTML).join('')}</div>`;
                 } else {
                     contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);"><i data-lucide="tv-2" class="w-16 h-16 mx-auto mb-4"></i><h3 class="text-xl font-semibold">Nenhum canal ao vivo disponível.</h3></div>`;
                 }
@@ -699,9 +715,10 @@
             function createLiveChannelCardHTML(channel) {
                 return `
                     <div class="live-channel-card rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-channel-id="${channel.id}">
-                        <div class="relative rounded-lg overflow-hidden aspect-video flex items-center justify-center p-4" style="background-color: var(--card-bg);">
-                            <img loading="lazy" src="${channel.logo}" alt="Logo de ${channel.title}" class="max-h-full max-w-full">
+                        <div class="relative rounded-lg overflow-hidden aspect-square flex items-center justify-center p-4" style="background-color: var(--card-bg);">
+                            <img loading="lazy" src="${channel.logo}" alt="Logo de ${channel.title}" class="max-h-full max-w-full object-contain">
                         </div>
+                        <h3 class="text-center font-semibold mt-2">${channel.title}</h3>
                     </div>`;
             }
 
