@@ -123,9 +123,8 @@
     
     <!-- Modal do Leitor de Vídeo -->
     <div id="player-modal" class="modal fixed inset-0 bg-black z-[51] flex flex-col">
-        <div class="flex items-center justify-between p-4 bg-black/50 absolute top-0 left-0 right-0 z-10">
-            <h2 id="player-title" class="text-lg font-semibold text-white"></h2>
-            <button id="close-player-modal" class="p-2"><i data-lucide="x" class="text-white"></i></button>
+        <div class="absolute top-0 left-0 z-10 p-4">
+            <button id="close-player-modal" class="p-2 bg-black/50 rounded-full hover:bg-black/70 transition"><i data-lucide="arrow-left" class="text-white"></i></button>
         </div>
         <div id="player-container" class="w-full h-full flex-1 relative"></div>
     </div>
@@ -414,7 +413,6 @@
             function openPlayerModal(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
-                DOMElements.playerModal.title.textContent = movie.title;
                 DOMElements.playerModal.playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
                 DOMElements.playerModal.container.classList.add('active');
             }
@@ -433,7 +431,6 @@
                         return;
                     }
 
-                    DOMElements.playerModal.title.textContent = `${series.title} - ${currentEpisode.title}`;
                     DOMElements.playerModal.playerContainer.innerHTML = `
                         <video id="player-video" class="w-full h-full" src="${currentEpisode.videoUrl}" controls autoplay></video>
                         <div class="absolute bottom-4 left-4 right-4 flex justify-between z-20">
