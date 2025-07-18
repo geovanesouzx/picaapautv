@@ -117,9 +117,12 @@
     </div>
     
     <!-- Modal do Leitor de Vídeo -->
-    <div id="player-modal" class="modal fixed inset-0 bg-black z-[51]">
-        <div id="player-container" class="w-full h-full"></div>
-        <button id="close-player-modal" class="absolute top-5 right-5 bg-black/50 rounded-full p-2"><i data-lucide="x"></i></button>
+    <div id="player-modal" class="modal fixed inset-0 bg-black z-[51] flex flex-col">
+        <div class="flex items-center justify-between p-4 bg-black/50">
+            <h2 id="player-title" class="text-lg font-semibold text-white"></h2>
+            <button id="close-player-modal" class="p-2"><i data-lucide="x" class="text-white"></i></button>
+        </div>
+        <div id="player-container" class="w-full h-full flex-1"></div>
     </div>
     
     <!-- Overlay de Perfil Mobile -->
@@ -146,6 +149,51 @@
                     { id: 10, title: "Elementos", year: "2023", rating: 4.6, genres: ["Animação", "Comédia", "Fantasia", "Romance"], director: "Peter Sohn", cast: ["Leah Lewis", "Mamoudou Athie"], synopsis: "Numa cidade onde vivem residentes de fogo, água, terra e ar...", poster: "https://lumiere-a.akamaihd.net/v1/images/elemental_bport_765442cf.png", backdrop: "https://lumiere-a.akamaihd.net/v1/images/lineup_my-element_03_5368a525.jpeg?region=0,1,1200,675&width=960", playerType: 'video', url: "https://1a-1791.com/video/fww1/eb/s8/2/c/y/v/u/cyvuy.gaa.mp4", progress: 0 },
                     { id: 11, title: "Moana 2", year: "2024", rating: 4.9, genres: ["Animação", "Aventura", "Fantasia"], director: "David G. Derrick Jr.", cast: ["Auli'i Cravalho", "Dwayne Johnson"], synopsis: "Moana embarca numa nova jornada com Maui...", poster: "https://upload.wikimedia.org/wikipedia/pt/thumb/7/73/Moana_2_poster.jpg/250px-Moana_2_poster.jpg", backdrop: "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/ac70c442-571e-48ae-8733-7494bd7d27c6/compose?aspectRatio=1.78&format=webp&width=1200", playerType: 'video', url: "https://1a-1791.com/video/fwe2/04/s8/2/s/x/t/s/sxtsy.gaa.mp4", progress: 0 }
                 ],
+                series: [
+                    {
+                        id: "pica-pau",
+                        title: "Pica-Pau",
+                        cover: "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/aXgyvCWLPkbZUCYR822KLsKZXgt.jpg",
+                        seasons: [
+                            {
+                                id: "season-1940",
+                                title: "Pica-Pau 1940",
+                                cover: "https://media.themoviedb.org/t/p/w600_and_h900_bestv2/aXgyvCWLPkbZUCYR822KLsKZXgt.jpg",
+                                description: "A primeira temporada do Pica-Pau, com suas travessuras clássicas e inesquecíveis.",
+                                episodes: [
+                                    { videoUrl: "https://files.catbox.moe/mj23l1.mp4", title: "Pica-Pau Ataca Novamente" },
+                                    { videoUrl: "https://files.catbox.moe/1onuvg.mp4", title: "O Pica-Pau Biruta" },
+                                    { videoUrl: "https://files.catbox.moe/fm8er6.mp4", title: "O Biruta" },
+                                    { videoUrl: "https://files.catbox.moe/3vlf67.mp4", title: "Pânico na Cozinha" },
+                                    { videoUrl: "https://files.catbox.moe/opgp7j.mp4", title: "O Matador de Hollywood" },
+                                    { videoUrl: "https://files.catbox.moe/13r6tn.mp4", title: "Um Ás de Mais" },
+                                    { videoUrl: "https://files.catbox.moe/2tsdpm.mp4", title: "A Loja do Prego" },
+                                    { videoUrl: "https://files.catbox.moe/eg8s85.mp4", title: "Beisebol Maluco" },
+                                    { videoUrl: "https://files.catbox.moe/3lths3.mp4", title: "O Acrobata Maluco" },
+                                    { videoUrl: "https://files.catbox.moe/35fv2h.mp4", title: "O Afanador de Gasolina" }
+                                ]
+                            },
+                            {
+                                id: "season-1944",
+                                title: "Pica-Pau 1944",
+                                cover: "https://media.fstatic.com/ZBAcWLThxObHAMWudFtlQhJEP_w=/322x478/smart/filters:format(webp)/media/movies/covers/2013/07/o-show-do-pica-pau-2a-temporada_t1283.jpg",
+                                description: "Mais aventuras malucas do Pica-Pau, agora com novos personagens e situações hilárias.",
+                                episodes: [
+                                    { videoUrl: "https://files.catbox.moe/04glch.mp4", title: "O Barbeiro de Sevilha" },
+                                    { videoUrl: "https://files.catbox.moe/0w74ed.mp4", title: "O Doido da Praia" },
+                                    { videoUrl: "https://files.catbox.moe/rxt33w.mp4", title: "Ski Para Dois" },
+                                    { videoUrl: "https://files.catbox.moe/2jn2cq.mp4", title: "Uma Dama Muito Fina" },
+                                    { videoUrl: "https://files.catbox.moe/ainphs.mp4", title: "O Pica-Pau Come Fora" },
+                                    { videoUrl: "https://files.catbox.moe/tj1f0o.mp4", title: "O Famoso Diplomata" },
+                                    { videoUrl: "https://files.catbox.moe/z9vbpa.mp4", title: "O Biruta à Solta" },
+                                    { videoUrl: "https://files.catbox.moe/ha4ilo.mp4", title: "Quem Cozinha Quem" },
+                                    { videoUrl: "https://files.catbox.moe/b79gdf.mp4", title: "A Hora do Banho" },
+                                    { videoUrl: "https://files.catbox.moe/6czmzf.mp4", title: "Motorista Desleixado" }
+                                ]
+                            }
+                        ]
+                    }
+                ],
                 carousels: [
                     { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
                     { title: "Continuar a Assistir", filter: (m) => m.progress > 0 && m.progress < 100 },
@@ -157,7 +205,7 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button')
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), themeToggle: document.getElementById('theme-toggle'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, detailsModal: { container: document.getElementById('details-modal'), content: document.getElementById('details-modal-content') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), mobileThemeToggle: document.getElementById('mobile-theme-toggle'), homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button')
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -204,7 +252,6 @@
                     </section>`;
             }
 
-            // Card para Carrossel (com largura definida)
             function createCarouselMovieCardHTML(movie) {
                 const progressBar = movie.progress > 0 ? `<div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-500/50 rounded-b-lg"><div class="h-full bg-purple-500 rounded-b-lg" style="width: ${movie.progress}%;"></div></div>` : '';
                 return `
@@ -216,7 +263,6 @@
                     </div>`;
             }
 
-            // Card para Grid (sem largura, para preencher a célula da grade)
             function createGridMovieCardHTML(movie) {
                 const progressBar = movie.progress > 0 ? `<div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-500/50 rounded-b-lg"><div class="h-full bg-purple-500 rounded-b-lg" style="width: ${movie.progress}%;"></div></div>` : '';
                 return `
@@ -231,48 +277,27 @@
             function renderMyListPage() {
                 DOMElements.heroSection.style.display = 'none';
                 updateActiveNav('list');
-                
                 const listMovies = db.movies.filter(m => myList.includes(m.id));
-                
-                let contentHTML = `
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                        <h2 class="text-2xl md:text-3xl font-bold mb-8">Minha Lista</h2>
-                `;
-
+                let contentHTML = `<div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-2xl md:text-3xl font-bold mb-8">Minha Lista</h2>`;
                 if (listMovies.length > 0) {
                     contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${listMovies.map(createGridMovieCardHTML).join('')}</div>`;
                 } else {
-                    contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);">
-                        <i data-lucide="list-x" class="w-16 h-16 mx-auto mb-4"></i>
-                        <h3 class="text-xl font-semibold">Sua lista está vazia</h3>
-                        <p class="mt-2">Adicione filmes e séries para vê-los aqui.</p>
-                    </div>`;
+                    contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);"><i data-lucide="list-x" class="w-16 h-16 mx-auto mb-4"></i><h3 class="text-xl font-semibold">Sua lista está vazia</h3><p class="mt-2">Adicione filmes e séries para vê-los aqui.</p></div>`;
                 }
-
                 contentHTML += '</div>';
                 DOMElements.contentContainer.innerHTML = contentHTML;
                 lucide.createIcons();
             }
 
-            function renderCategoryPage(pageTitle, items, emptyMessage) {
+            function renderCategoryPage(pageTitle, items, emptyMessage, cardRenderer) {
                 DOMElements.heroSection.style.display = 'none';
-                updateActiveNav(''); // Desativa qualquer item ativo na barra de navegação inferior
-
-                let contentHTML = `
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                        <h2 class="text-2xl md:text-3xl font-bold mb-8">${pageTitle}</h2>
-                `;
-
+                updateActiveNav('');
+                let contentHTML = `<div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-2xl md:text-3xl font-bold mb-8">${pageTitle}</h2>`;
                 if (items.length > 0) {
-                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${items.map(createGridMovieCardHTML).join('')}</div>`;
+                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${items.map(cardRenderer).join('')}</div>`;
                 } else {
-                    contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);">
-                        <i data-lucide="tv-2" class="w-16 h-16 mx-auto mb-4"></i>
-                        <h3 class="text-xl font-semibold">${emptyMessage.title}</h3>
-                        <p class="mt-2">${emptyMessage.subtitle}</p>
-                    </div>`;
+                    contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);"><i data-lucide="tv-2" class="w-16 h-16 mx-auto mb-4"></i><h3 class="text-xl font-semibold">${emptyMessage.title}</h3><p class="mt-2">${emptyMessage.subtitle}</p></div>`;
                 }
-
                 contentHTML += '</div>';
                 DOMElements.contentContainer.innerHTML = contentHTML;
                 lucide.createIcons();
@@ -281,30 +306,7 @@
             function showDetailsModal(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
-                
-                DOMElements.detailsModal.content.innerHTML = `
-                    <div class="relative">
-                        <img src="${movie.backdrop}" alt="${movie.title}" class="w-full h-48 md:h-72 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/e5e7eb?text=Imagem+Indisponível';">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div>
-                        <button id="close-details-modal" class="absolute top-3 right-3 bg-black/50 rounded-full p-1.5"><i data-lucide="x"></i></button>
-                    </div>
-                    <div class="p-4 md:p-6">
-                        <h2 class="text-3xl font-bold">${movie.title} (${movie.year})</h2>
-                        <div class="flex items-center my-2 space-x-4 text-sm" style="color: var(--text-secondary)">
-                            <div class="flex items-center text-yellow-400">${'★'.repeat(Math.round(movie.rating))}${'☆'.repeat(5 - Math.round(movie.rating))} <span class="ml-2" style="color: var(--text-primary);">${movie.rating}</span></div>
-                            <span>${movie.genres.join(', ')}</span>
-                        </div>
-                        <p class="my-4">${movie.synopsis}</p>
-                        <div class="text-sm space-y-1">
-                            <p><strong style="color: var(--text-primary)">Diretor:</strong> ${movie.director}</p>
-                            <p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p>
-                        </div>
-                        <div class="flex flex-col sm:flex-row gap-3 mt-6">
-                            <button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button>
-                            <button class="add-to-list-btn flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button>
-                        </div>
-                    </div>`;
-                
+                DOMElements.detailsModal.content.innerHTML = `<div class="relative"><img src="${movie.backdrop}" alt="${movie.title}" class="w-full h-48 md:h-72 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/e5e7eb?text=Imagem+Indisponível';"><div class="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] to-transparent"></div><button id="close-details-modal" class="absolute top-3 right-3 bg-black/50 rounded-full p-1.5"><i data-lucide="x"></i></button></div><div class="p-4 md:p-6"><h2 class="text-3xl font-bold">${movie.title} (${movie.year})</h2><div class="flex items-center my-2 space-x-4 text-sm" style="color: var(--text-secondary)"><div class="flex items-center text-yellow-400">${'★'.repeat(Math.round(movie.rating))}${'☆'.repeat(5 - Math.round(movie.rating))} <span class="ml-2" style="color: var(--text-primary);">${movie.rating}</span></div><span>${movie.genres.join(', ')}</span></div><p class="my-4">${movie.synopsis}</p><div class="text-sm space-y-1"><p><strong style="color: var(--text-primary)">Diretor:</strong> ${movie.director}</p><p><strong style="color: var(--text-primary)">Elenco:</strong> ${movie.cast.join(', ')}</p></div><div class="flex flex-col sm:flex-row gap-3 mt-6"><button class="watch-btn flex-1 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-5 rounded-lg transition" data-movie-id="${movie.id}"><i data-lucide="play" class="mr-2"></i>Assistir</button><button class="add-to-list-btn flex-1 flex items-center justify-center border font-bold py-3 px-5 rounded-lg transition hoverable-item" style="border-color: var(--text-secondary);" data-movie-id="${movie.id}"></button></div></div>`;
                 updateAddToListButton(DOMElements.detailsModal.content.querySelector('.add-to-list-btn'));
                 DOMElements.detailsModal.container.classList.add('active');
                 lucide.createIcons();
@@ -314,16 +316,21 @@
             function openPlayerModal(movieId) {
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
-                
                 const playerContainer = DOMElements.playerModal.playerContainer;
-                
+                DOMElements.playerModal.title.textContent = movie.title;
                 if (movie.playerType === 'iframe') {
                     playerContainer.innerHTML = `<iframe id="player-iframe" class="w-full h-full" src="${movie.url}" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
                 } else if (movie.playerType === 'video') {
                     playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${movie.url}" controls autoplay></video>`;
                 }
-                
                 DOMElements.detailsModal.container.classList.remove('active');
+                DOMElements.playerModal.container.classList.add('active');
+            }
+
+            function openPlayerModalForEpisode(videoUrl, title) {
+                const playerContainer = DOMElements.playerModal.playerContainer;
+                DOMElements.playerModal.title.textContent = title;
+                playerContainer.innerHTML = `<video id="player-video" class="w-full h-full" src="${videoUrl}" controls autoplay></video>`;
                 DOMElements.playerModal.container.classList.add('active');
             }
 
@@ -332,6 +339,49 @@
                 DOMElements.playerModal.container.classList.remove('active');
                 if (document.fullscreenElement) document.exitFullscreen();
             }
+            
+            // --- RENDERIZAÇÃO DE SÉRIES ---
+            function createSeriesCardHTML(series) {
+                return `<div class="series-card rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-series-id="${series.id}"><div class="relative rounded-lg overflow-hidden aspect-[2/3]" style="background-color: var(--card-bg);"><img loading="lazy" src="${series.cover}" alt="Capa de ${series.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1f2937/e5e7eb?text=Imagem+Indisponível';"></div></div>`;
+            }
+
+            function renderSeriesDetailsPage(seriesId) {
+                const series = db.series.find(s => s.id === seriesId);
+                if (!series) return;
+
+                DOMElements.heroSection.style.display = 'none';
+                updateActiveNav('');
+
+                let seasonsHTML = series.seasons.map(season => `
+                    <div class="p-4 rounded-lg" style="background-color: var(--card-bg);">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <img src="${season.cover}" class="w-32 h-48 object-cover rounded-md flex-shrink-0">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold">${season.title}</h3>
+                                <p class="text-sm mt-1 mb-3" style="color: var(--text-secondary);">${season.description}</p>
+                                <div class="max-h-48 overflow-y-auto space-y-2 pr-2">
+                                    ${season.episodes.map((ep, index) => `
+                                        <button class="episode-item w-full text-left p-2 rounded-md hoverable-item flex items-center" data-video-url="${ep.videoUrl}" data-video-title="${ep.title}">
+                                            <span class="mr-2" style="color: var(--text-secondary);">${index + 1}</span>
+                                            <span class="flex-1">${ep.title}</span>
+                                            <i data-lucide="play-circle" class="w-5 h-5"></i>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                DOMElements.contentContainer.innerHTML = `
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-8">${series.title}</h2>
+                        <div class="space-y-8">${seasonsHTML}</div>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+
 
             // --- FUNÇÕES DE UTILIDADE E LÓGICA ---
             const saveMyList = () => localStorage.setItem('myList', JSON.stringify(myList));
@@ -345,7 +395,6 @@
                     myList.push(id);
                 }
                 saveMyList();
-                
                 document.querySelectorAll(`.add-to-list-btn[data-movie-id="${id}"]`).forEach(updateAddToListButton);
             }
 
@@ -353,7 +402,6 @@
                 if (!button) return;
                 const movieId = parseInt(button.dataset.movieId);
                 const isInList = myList.includes(movieId);
-                
                 if (isInList) {
                     button.innerHTML = `<i data-lucide="check" class="mr-2"></i>Na Minha Lista`;
                 } else {
@@ -372,6 +420,7 @@
                 DOMElements.html.classList.toggle('light');
                 DOMElements.html.classList.toggle('dark');
                 localStorage.setItem('theme', DOMElements.html.classList.contains('dark') ? 'dark' : 'light');
+                renderHero(); // Re-render hero to apply text color changes
                 updateThemeIcons();
             }
             
@@ -402,42 +451,32 @@
                 // Navegação Principal
                 DOMElements.homeLink.onclick = (e) => { e.preventDefault(); renderHomePage(); };
                 DOMElements.desktopListBtn.onclick = renderMyListPage;
-                DOMElements.desktopMoviesBtn.onclick = () => renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' });
-                DOMElements.desktopSeriesBtn.onclick = () => renderCategoryPage('Séries', [], { title: 'Séries em Breve', subtitle: 'Nenhuma série encontrada. Volte mais tarde!' });
+                DOMElements.desktopMoviesBtn.onclick = () => renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML);
+                DOMElements.desktopSeriesBtn.onclick = () => renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createSeriesCardHTML);
 
                 // Navegação da Barra Inferior (Mobile)
                 DOMElements.mobileNavBar.addEventListener('click', (e) => {
                     const navBtn = e.target.closest('.mobile-nav-item');
                     if (!navBtn || !navBtn.dataset.nav) return;
-                    
                     if (navBtn.dataset.nav === 'home') renderHomePage();
                     if (navBtn.dataset.nav === 'list') renderMyListPage();
-                    // Adicionar lógica para 'search' aqui se necessário
                 });
 
                 // Navegação do Menu Lateral (Mobile)
-                const mobileSidebarNav = document.getElementById('mobile-sidebar-nav');
-                mobileSidebarNav.addEventListener('click', (e) => {
+                document.getElementById('mobile-sidebar-nav').addEventListener('click', (e) => {
                     e.preventDefault();
                     const navLink = e.target.closest('a');
                     if (!navLink || !navLink.dataset.nav) return;
-
                     const navTarget = navLink.dataset.nav;
                     switch(navTarget) {
-                        case 'home':
-                            renderHomePage();
-                            break;
-                        case 'movies':
-                            renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' });
-                            break;
-                        case 'series':
-                            renderCategoryPage('Séries', [], { title: 'Séries em Breve', subtitle: 'Nenhuma série encontrada. Volte mais tarde!' });
-                            break;
+                        case 'home': renderHomePage(); break;
+                        case 'movies': renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML); break;
+                        case 'series': renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createSeriesCardHTML); break;
                     }
-                    DOMElements.mobileNav.classList.remove('active'); // Fecha o menu lateral
+                    DOMElements.mobileNav.classList.remove('active');
                 });
 
-                // Listener de cliques global para modais e botões
+                // Listener de cliques global
                 document.addEventListener('click', (e) => {
                     const target = e.target;
                     const detailsBtn = target.closest('.details-btn');
@@ -449,6 +488,12 @@
                     const listBtn = target.closest('.add-to-list-btn');
                     if (listBtn) return toggleMovieInList(listBtn.dataset.movieId);
                     
+                    const seriesCard = target.closest('.series-card');
+                    if (seriesCard) return renderSeriesDetailsPage(seriesCard.dataset.seriesId);
+
+                    const episodeItem = target.closest('.episode-item');
+                    if (episodeItem) return openPlayerModalForEpisode(episodeItem.dataset.videoUrl, episodeItem.dataset.videoTitle);
+
                     if (!DOMElements.profileDropdownContainer.contains(target)) {
                         DOMElements.profileMenu.classList.add('hidden');
                     }
