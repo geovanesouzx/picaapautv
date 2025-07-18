@@ -388,7 +388,6 @@
             }
 
             function renderMovieDetailsPage(movieId) {
-                window.scrollTo(0, 0);
                 const movie = db.movies.find(m => m.id == movieId);
                 if (!movie) return;
 
@@ -441,6 +440,7 @@
                 updateAddToListButton(DOMElements.contentContainer.querySelector('.add-to-list-btn'));
                 lucide.createIcons();
                 setupRatingAndComments(`movie-${movie.id}`);
+                window.scrollTo(0, 0);
             }
             
             function openPlayerModal(movieId) {
@@ -513,7 +513,6 @@
             }
 
             function renderSeriesDetailsPage(seriesId) {
-                window.scrollTo(0, 0);
                 const series = db.series.find(s => s.id === seriesId);
                 if (!series) return;
 
@@ -586,6 +585,7 @@
                 }
                 lucide.createIcons();
                 setupRatingAndComments(`series-${series.id}`);
+                window.scrollTo(0, 0);
             }
 
             // --- RENDERIZAÇÃO DE GÊNEROS ---
