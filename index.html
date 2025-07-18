@@ -67,6 +67,7 @@
                 </div>
                 <div class="hidden lg:flex items-center space-x-4">
                       <button id="desktop-search-button" class="p-2 rounded-md hoverable-item"><i data-lucide="search"></i></button>
+                      <button id="desktop-live-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Ao Vivo</button>
                       <button id="desktop-movies-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Filmes</button>
                       <button id="desktop-series-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Séries</button>
                       <button id="desktop-genres-button" class="text-sm font-medium p-2 rounded-md hoverable-item">Gêneros</button>
@@ -96,6 +97,7 @@
             </div>
             <nav id="mobile-sidebar-nav" class="flex flex-col space-y-4 text-lg">
                 <a href="#" data-nav="home" class="p-2 rounded-md hoverable-item">Início</a>
+                <a href="#" data-nav="live" class="p-2 rounded-md hoverable-item">Ao Vivo</a>
                 <a href="#" data-nav="movies" class="p-2 rounded-md hoverable-item">Filmes</a>
                 <a href="#" data-nav="series" class="p-2 rounded-md hoverable-item">Séries</a>
                 <a href="#" data-nav="genres" class="p-2 rounded-md hoverable-item">Gêneros</a>
@@ -118,6 +120,7 @@
         <div id="mobile-nav-bar" class="flex justify-around items-center h-full">
             <button data-nav="home" class="mobile-nav-item active flex flex-col items-center p-2"><i data-lucide="home" class="w-6 h-6 mb-1"></i><span class="text-sm">Início</span></button>
             <button data-nav="search" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="search" class="w-6 h-6 mb-1"></i><span class="text-sm">Buscar</span></button>
+            <button data-nav="live" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="tv" class="w-6 h-6 mb-1"></i><span class="text-sm">Ao Vivo</span></button>
             <button data-nav="list" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="list-video" class="w-6 h-6 mb-1"></i><span class="text-sm">Minha Lista</span></button>
             <button id="mobile-profile-button" class="mobile-nav-item flex flex-col items-center p-2"><i data-lucide="user-2" class="w-6 h-6 mb-1"></i><span class="text-sm">Perfil</span></button>
         </div>
@@ -305,6 +308,9 @@
                         ]
                     }
                 ],
+                liveChannels: [
+                    { id: 'sbt', title: 'SBT', embedUrl: 'https://embedmax.site/canais/sbtsp/', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/SBT_logo_2014.svg/2048px-SBT_logo_2014.svg.png'}
+                ],
                 carousels: [
                     { title: "Adicionados Recentemente", filter: (item) => true, sort: (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded) },
                     { title: "Populares na CineVerse", filter: (m) => m.rating >= 4.5 },
@@ -317,7 +323,7 @@
             let myList = JSON.parse(localStorage.getItem('myList')) || [];
 
             const DOMElements = {
-                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), desktopSettingsBtn: document.getElementById('desktop-settings-btn'), mobileSettingsBtn: document.getElementById('mobile-settings-btn'), settingsModal: { container: document.getElementById('settings-modal'), closeBtn: document.getElementById('close-settings-modal'), themeToggle: document.getElementById('theme-toggle-switch') }, homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
+                html: document.documentElement, loadingSpinner: document.getElementById('loading-spinner'), profileBtn: document.getElementById('profile-button'), profileMenu: document.getElementById('profile-menu'), profileDropdownContainer: document.getElementById('profile-dropdown-container'), hamburgerBtn: document.getElementById('hamburger-button'), mobileNav: document.getElementById('mobile-nav'), closeMobileNav: document.getElementById('close-mobile-nav'), playerModal: { container: document.getElementById('player-modal'), closeBtn: document.getElementById('close-player-modal'), playerContainer: document.getElementById('player-container'), title: document.getElementById('player-title') }, contentContainer: document.getElementById('content-container'), heroSection: document.getElementById('hero-section'), mobileProfileBtn: document.getElementById('mobile-profile-button'), mobileProfileOverlay: document.getElementById('mobile-profile-overlay'), closeProfileOverlay: document.getElementById('close-profile-overlay'), desktopSettingsBtn: document.getElementById('desktop-settings-btn'), mobileSettingsBtn: document.getElementById('mobile-settings-btn'), settingsModal: { container: document.getElementById('settings-modal'), closeBtn: document.getElementById('close-settings-modal'), themeToggle: document.getElementById('theme-toggle-switch') }, homeLink: document.getElementById('home-link'), mobileNavBar: document.getElementById('mobile-nav-bar'), desktopListBtn: document.getElementById('desktop-list-button'), desktopMoviesBtn: document.getElementById('desktop-movies-button'), desktopSeriesBtn: document.getElementById('desktop-series-button'), desktopGenresBtn: document.getElementById('desktop-genres-button'), desktopSearchBtn: document.getElementById('desktop-search-button'), desktopLiveBtn: document.getElementById('desktop-live-button'), searchModal: { container: document.getElementById('search-modal'), input: document.getElementById('search-input'), results: document.getElementById('search-results'), closeBtn: document.getElementById('close-search-modal') }
             };
 
             // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -495,6 +501,13 @@
                 DOMElements.playerModal.container.classList.add('active');
             }
 
+            function openLivePlayerModal(channelId) {
+                const channel = db.liveChannels.find(c => c.id === channelId);
+                if (!channel) return;
+                DOMElements.playerModal.playerContainer.innerHTML = `<iframe class="w-full h-full" src="${channel.embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                DOMElements.playerModal.container.classList.add('active');
+            }
+
             function openPlayerModalForEpisode(seriesId, seasonId, episodeIndex) {
                 const series = db.series.find(s => s.id === seriesId);
                 const season = series?.seasons.find(s => s.id === seasonId);
@@ -668,6 +681,29 @@
                 lucide.createIcons();
             }
 
+            function renderLiveTvPage() {
+                DOMElements.contentContainer.className = 'py-8 md:py-12';
+                DOMElements.heroSection.style.display = 'none';
+                updateActiveNav('live');
+                let contentHTML = `<div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-2xl md:text-3xl font-bold mb-8">TV Ao Vivo</h2>`;
+                if (db.liveChannels.length > 0) {
+                    contentHTML += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4">${db.liveChannels.map(createLiveChannelCardHTML).join('')}</div>`;
+                } else {
+                    contentHTML += `<div class="text-center py-16" style="color: var(--text-secondary);"><i data-lucide="tv-2" class="w-16 h-16 mx-auto mb-4"></i><h3 class="text-xl font-semibold">Nenhum canal ao vivo disponível.</h3></div>`;
+                }
+                contentHTML += '</div>';
+                DOMElements.contentContainer.innerHTML = contentHTML;
+                lucide.createIcons();
+            }
+
+            function createLiveChannelCardHTML(channel) {
+                return `
+                    <div class="live-channel-card rounded-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer group" data-channel-id="${channel.id}">
+                        <div class="relative rounded-lg overflow-hidden aspect-video flex items-center justify-center p-4" style="background-color: var(--card-bg);">
+                            <img loading="lazy" src="${channel.logo}" alt="Logo de ${channel.title}" class="max-h-full max-w-full">
+                        </div>
+                    </div>`;
+            }
 
             // --- FUNÇÕES DE UTILIDADE E LÓGICA ---
             function setupCarouselNavigation() {
@@ -858,6 +894,7 @@
                 // Navegação Principal
                 DOMElements.homeLink.onclick = (e) => { e.preventDefault(); renderHomePage(); };
                 DOMElements.desktopListBtn.onclick = renderMyListPage;
+                DOMElements.desktopLiveBtn.onclick = renderLiveTvPage;
                 DOMElements.desktopMoviesBtn.onclick = () => renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML);
                 DOMElements.desktopSeriesBtn.onclick = () => renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createGridSeriesCardHTML);
                 DOMElements.desktopGenresBtn.onclick = renderGenresPage;
@@ -876,6 +913,7 @@
                     if (!navBtn || !navBtn.dataset.nav) return;
                     if (navBtn.dataset.nav === 'home') renderHomePage();
                     if (navBtn.dataset.nav === 'list') renderMyListPage();
+                    if (navBtn.dataset.nav === 'live') renderLiveTvPage();
                 });
 
                 // Navegação do Menu Lateral (Mobile)
@@ -886,6 +924,7 @@
                     const navTarget = navLink.dataset.nav;
                     switch(navTarget) {
                         case 'home': renderHomePage(); break;
+                        case 'live': renderLiveTvPage(); break;
                         case 'movies': renderCategoryPage('Filmes', db.movies, { title: 'Nenhum filme encontrado', subtitle: 'Não há filmes para exibir no momento.' }, createGridMovieCardHTML); break;
                         case 'series': renderCategoryPage('Séries', db.series, { title: 'Nenhuma série encontrada', subtitle: 'Volte mais tarde!' }, createGridSeriesCardHTML); break;
                         case 'genres': renderGenresPage(); break;
@@ -923,6 +962,9 @@
 
                     const genreBtn = target.closest('.genre-btn');
                     if (genreBtn) return renderGenreResults(genreBtn.dataset.genre);
+
+                    const liveChannelCard = target.closest('.live-channel-card');
+                    if (liveChannelCard) return openLivePlayerModal(liveChannelCard.dataset.channelId);
 
                     if (!DOMElements.profileDropdownContainer.contains(target)) {
                         DOMElements.profileMenu.classList.add('hidden');
